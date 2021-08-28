@@ -1,0 +1,88 @@
+.header {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    color: #2C2C2C;
+    margin-bottom: 47px;
+    margin-top: 38px;
+}
+
+.image {
+   width: 276px;
+   height: 276px;
+   object-fit: cover;
+   border-radius: 200px;
+   margin-bottom: 23px;
+}
+
+.buttons
+{
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 24px;
+    color: #2C2C2C;
+    text-decoration: none;
+}
+
+.buttons:visited {
+    text-decoration: none;
+    color: #2C2C2C;
+}
+
+.buttons:visited:hover, .buttons:hover {
+    opacity: 0.8;
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+.nextBtn {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.label {
+    margin-left: 33px;
+    margin-right: 33px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 28px;
+    color: #828088;
+    margin-bottom: 28px;
+}
+
+.ok_icon {
+    width: 49px;
+    height: 49px;
+}
+
+.app {
+    text-align: center;
+}
+
+.smile {
+    margin-bottom: 40px;
+}
+
+.timer {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 400px)
+{ 
+    .header {
+        margin-bottom: 15px;
+        margin-top: 20px;
+    }
+    
+    .image {
+       width: 200px;
+       height: 200px;
+       border-radius: 180px;
+    }
+}
+
+

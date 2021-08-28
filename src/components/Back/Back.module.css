@@ -1,0 +1,8 @@
+.back {
+  text-align: left;
+  padding-top: 17px;
+  margin-left: 16px;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+}

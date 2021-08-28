@@ -1,0 +1,11 @@
+.app-wrapper {
+  width: 375px;
+  background-color: white;
+  margin: 0 auto;
+  text-align: center;
+  font-family: 'Montserrat';
+}
+
+.app-wrapper-content {
+  width: 100%;
+}

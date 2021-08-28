@@ -1,0 +1,116 @@
+.input {
+  position: relative;
+  margin-top: 12px;
+  margin: 0 auto;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.input_native,
+.inputPasswordOpen,
+.inputPasswordClose,
+.enterPasswordOpen,
+.enterPasswordClose,
+.enterInput {
+  position: relative;
+  height: 40px;
+  width: 340px;
+  min-height: 40px;
+  background: #f2f2f2;
+  border-radius: 26px 26px 5px 26px;
+  outline: none;
+  color: #2c2c2c;
+  padding-left: 15px;
+  padding-top: 20px;
+  /* padding-right: 15px; */
+  border: none;
+  text-align: left;
+  font-family: 'Montserrat';
+  font-size: 17px;
+  appearance: none;
+  opacity: 1 !important;
+  -webkit-box-shadow: inset 0 0 0 50px #f2f2f2;
+  -webkit-text-fill-color: #000;
+}
+
+.enterInput,
+.enterPasswordOpen {
+  font-size: 17px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.enterPasswordClose,
+.inputPasswordClose {
+  font-size: 20px;
+  -webkit-box-shadow: inset 0 0 0 50px #f2f2f2;
+  -webkit-text-fill-color: #000;
+  -webkit-text-security: disc;
+}
+
+.enterPasswordClose {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.input_native::placeholder,
+.enterInput::placeholder,
+.input_native:disabled,
+.enterInput:disabled {
+  color: #969696;
+  opacity: 0.5 !important;
+}
+
+.input_native:disabled::placeholder,
+.enterInput:disabled::placeholder {
+  color: #969696;
+  opacity: 1 !important;
+}
+
+.valid_icon {
+  position: absolute;
+  right: 5%;
+  bottom: 27%;
+  width: 22px;
+  height: 22px;
+}
+
+.eye {
+  width: 22px;
+  height: 22px;
+}
+
+.eyeButton {
+  position: absolute;
+  right: 60px;
+  top: 15px;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+}
+
+.label {
+  position: absolute;
+  height: 12px;
+  top: 12px;
+  margin-bottom: 10px;
+  left: 25px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 13px;
+  color: #4a4a4a;
+}
+
+@media (max-width: 768px) {
+  .input_native {
+    font-size: 14.5px;
+  }
+  .label {
+    font-size: 10px;
+  }
+}

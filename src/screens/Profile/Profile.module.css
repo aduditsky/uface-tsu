@@ -1,0 +1,146 @@
+.header {
+    text-align: left;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 34px;
+    line-height: 38px;
+    color: #2C2C2C;
+    margin-top: 30px;
+    margin-bottom: 8px;
+}
+
+.links {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+}
+
+.uface {
+    font-weight: 600;
+    text-align: left;
+    font-size: 17px;
+    text-decoration: none;
+    color: #2C2C2C;
+}
+
+.uface:hover, .uface:visited:hover {
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.closeBtn {
+    outline: none;
+    text-decoration: none;
+    background:none;
+    border:none;
+    text-align: right;
+}
+
+.closeImg {
+    margin-left: 85px;
+    outline: none;
+    text-decoration: none;
+    background:none;
+    border:none;
+    cursor: pointer;
+}
+
+.my_profile {
+    display: inline-flex;
+}
+
+.inputs {
+    margin-bottom: 15px;
+}
+
+.formInput{
+    margin-bottom: 10px;
+}
+
+.formSelect{
+    margin-bottom: 15px;
+}
+
+.photo {
+    object-fit: cover;
+    margin-top: 11px;
+    margin-left: 35px;
+    width: 66px;
+    height: 66px;
+    border-radius: 128px;
+    /* margin-bottom: 12px; */
+}
+
+.options {
+    display: grid;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.update {
+    margin-bottom: 16px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    color: #2C2C2C;
+    text-decoration: none;
+    background:none;
+    border:none;
+    margin-top: 12px;
+    padding:0;
+    font-family: "Montserrat";
+    outline: none;
+}
+
+.update:visited:hover , .update:hover, .update_pass:visited:hover ,
+ .update_pass:hover {
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.update_pass {
+    margin-bottom: 16px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    color: #2C2C2C;
+    text-decoration: none;
+    background:none;
+    border:none;
+    margin-top: 12px;
+    padding:0;
+    font-family: "Montserrat";
+    outline: none;
+}
+
+.buttons
+{
+    text-decoration: none;
+    margin-bottom: 10px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    color: #2C2C2C;
+    margin-top: 15px;
+}
+
+.buttons:visited {
+    text-decoration: none;
+    color: #2C2C2C;
+}
+
+.formInput{
+    margin-bottom: 15px;
+    
+}
+
+.code_span {
+    margin: 10px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    color: #2C2C2C;
+}

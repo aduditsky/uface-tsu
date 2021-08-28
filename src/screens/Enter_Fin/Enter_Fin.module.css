@@ -1,0 +1,189 @@
+.base_container {
+  margin-top: 50px;
+}
+
+.content {
+  width: 100%;
+}
+
+.image {
+  width: 100%;
+}
+
+.image img {
+  width: 193px;
+  height: auto;
+}
+
+.log_in {
+  display: grid;
+  margin-top: 69px;
+  margin-bottom: 80px;
+  justify-items: center;
+}
+
+.log_in_tsu {
+  margin-top: 30px;
+  margin-bottom: 35px;
+}
+
+.log_in_tsu .log_in_with {
+  color: #247abf;
+  font-weight: 600;
+  line-height: 20px;
+  size: 16px;
+
+  font-family: 'Open Sans', sans-serif;
+}
+
+.log_in_with {
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-size: 17px;
+  line-height: 20px;
+  color: #828088;
+  font-weight: 600;
+  outline: none;
+  text-decoration: none;
+  background: none;
+  border: none;
+  display: block;
+}
+
+.log_in_with:hover,
+.log_in_with:visited:hover {
+  text-decoration: underline;
+}
+
+.log_in_with:visited {
+  text-decoration: none;
+  color: #828088;
+}
+
+.regBtn {
+  font-weight: 700;
+  font-style: normal;
+  font-size: 17px;
+  line-height: 24px;
+  color: #2c2c2c;
+  text-decoration: none;
+}
+
+.regBtn:visited:hover,
+.regBtn:hover {
+  opacity: 0.8;
+  font-weight: 00;
+  text-decoration: underline;
+}
+
+.regBtn:visited {
+  text-decoration: none;
+  color: #2c2c2c;
+}
+
+.enterBtn {
+  padding: 0 36px 53px 36px;
+}
+
+.sber_icon {
+  margin-right: 8px;
+  color: #169a33;
+}
+
+.log_in_cber {
+  margin-top: 15px;
+  color: #169a33;
+  display: inline-flex;
+}
+
+/* Тут цвет сбера */
+.log_in_cber .log_in_with {
+  color: #169a33;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  size: 16px;
+  line-height: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.log_in_cber .sber_icon {
+  color: #169a33;
+}
+
+@media (max-width: 380px) {
+  .faceelook,
+  .tsuLogo {
+    /* width: 194px;
+    height: 222px; */
+  }
+}
+
+@media (max-width: 420px) {
+  .faceelook,
+  .tsuLogo {
+    width: 194px;
+    height: 222px;
+  }
+}
+
+/* useEffect(() => {
+    init()
+    const getmmpm = getMobileOperatingSystem
+    if (getm === "iOS") {
+        ios = true;
+    }
+}, [])
+
+{
+    !ios ? (
+        <div>
+            <Link to='#' className={css.buttons} onClick={
+                () => {
+                    setNoPhoto(true)
+                    setIsCamera(true)
+                    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                        navigator.mediaDevices
+                            .getUserMedia({ video: true })
+                            .then(function (stream) {
+                                camera.current.srcObject = stream;
+                                camera.current.play();
+                                const { width, height } = stream.getTracks()[0].getSettings();
+                                setCameraSize({
+                                    width,
+                                    height
+                                });
+                            });
+                    }
+                }
+            }>Сфотографироваться</Link>
+            <input
+                type="file"
+                accept="video/*"
+                capture="camera"
+                onChange={onChangeFile}
+                style={{ display: 'none' }}
+            ></input>
+        </div>
+    ) :
+        (<Link to='#' className={css.buttons} onClick={
+            () => {
+                setNoPhoto(true)
+                setIsCamera(true)
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices
+                        .getUserMedia({ video: true })
+                        .then(function (stream) {
+                            camera.current.srcObject = stream;
+                            camera.current.play();
+                            const { width, height } = stream.getTracks()[0].getSettings();
+                            setCameraSize({
+                                width,
+                                height
+                            });
+                        });
+                }
+            }
+        }>Сфотографироваться</Link>)
+} */

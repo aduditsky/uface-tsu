@@ -1,0 +1,28 @@
+.modalContainer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: black;
+    z-index: 1000000000;
+    opacity: 0.9;
+}
+.modalCard {
+    position: absolue;
+    left: 50%;
+    top: 50%;
+}
+.modalContent {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000000001;
+}
+.modalData {
+    background-color: white;
+    padding: 30px;
+    min-height: 100px;
+    border-radius: 20px;
+}
