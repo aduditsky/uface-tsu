@@ -34,8 +34,8 @@ const deletePhoto = async (api) => {
     redirect: 'follow',
   };
 
-  const f = await fetch('https://uface.su/' + api, requestOptions);
-  const json = await f.json();
+  const req = await fetch('https://uface.su/' + api, requestOptions);
+  const json = await req.json();
   return json;
 };
 
@@ -50,8 +50,8 @@ const MakeExtImgAsMain = async (api) => {
     redirect: 'follow',
   };
 
-  const f = await fetch('https://uface.su/' + api, requestOptions);
-  const json = await f.json();
+  const req = await fetch('https://uface.su/' + api, requestOptions);
+  const json = await req.json();
   return json;
 };
 
@@ -115,12 +115,33 @@ const postToken = async (api) => {
   return json;
 };
 
-export default {
+const refreshToken = async (api) => {
+  var myHeaders = new Headers();
+  myHeaders.append('Refresh_t', localStorage.getItem('rtoken'));
+  myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'));
+
+  var urlencoded = new URLSearchParams();
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: 'follow',
+  };
+  const f = await fetch('https://uface.su/' + api, requestOptions);
+  const json = await f.json();
+  return json;
+};
+
+const request = {
   get,
   post,
   postAuth,
   deletePhoto,
   getAuth,
   postToken,
+  refreshToken,
   MakeExtImgAsMain,
 };
+
+export default request;

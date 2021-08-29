@@ -1,198 +1,194 @@
-import { useState, useRef, useEffect } from "react";
-import photo from "../../images/photo.jpg";
-import Button from "../../components/Button/Button";
+import { useState, useRef, useEffect } from 'react';
+import EmptyPhoto from '../../images/photo.jpg';
+import Button from '../../components/Button/Button';
 import css from './FormPart2.module.css';
-import { Link, Redirect } from "react-router-dom";
-import Back from "../../components/Back/Back";
-import smile from "../../images/smile.svg";
-import getMobileOperatingSystem from "../../getMobileOperatingSystem";
+import { Link, Redirect } from 'react-router-dom';
+import Back from '../../components/Back/Back';
+import smile from '../../images/smile.svg';
+import validateIcon from '../../images/valid_icon.svg';
+import Webcam from 'react-webcam';
 
 const FormPart2 = () => {
-    const [image, setimage] = useState(sessionStorage.getItem("recoverPhoto") || photo || null)
-    const [isCamera, setIsCamera] = useState(false);
-    const [noPhoto, setNoPhoto] = useState(false);
-    const [ok, setOk] = useState(false);
-    const [seconds, setSeconds] = useState(3);
-    const [cameraSize, setCameraSize] = useState({
-        width: 0,
-        height: 0
+  const [isCamera, setIsCamera] = useState(false);
+  const [takeScreenshot, setScreenshot] = useState(false);
+  const [takeing, setTakeIn] = useState(false);
+  const [photo, setPhoto] = useState(
+    sessionStorage.getItem('recoverPhoto') || ''
+  );
+  const [ok, setOk] = useState(false);
+  const [debugPhoto, setDebugPhoto] = useState('');
+  const [secondRemaining, setSeconds] = useState(3);
+  //   const [isIOS, setIOS] = useState(false);
+  //   const [cameraSize, setCameraSize] = useState({
+  //     width: 0,
+  //     height: 0,
+  //   });
+  const camera = useRef(null);
+  function takePhoto() {
+    console.log(`Начало фотографии`);
+    let timeToScreenshot = secondRemaining;
+
+    setTakeIn(true);
+    let timer = setInterval(() => {
+      if (timeToScreenshot === 0) {
+        let photoBase64 = camera.current.getScreenshot();
+
+        console.log({ photoBase64 });
+
+        sessionStorage.setItem('recoverPhoto', photoBase64);
+        setPhoto(photoBase64);
+        setDebugPhoto(photoBase64);
+
+        setTakeIn(false);
+        setIsCamera(false);
+        setScreenshot(true);
+
+        clearInterval(timer);
+      } else {
+        setSeconds((prev) => prev - 1);
+        timeToScreenshot -= 1;
+      }
+    }, 1000);
+  }
+
+  const onChangeFile = async (e) => {
+    const file = e.currentTarget.files[0];
+    const result = await toBase64(file).catch((e) => Error(e));
+    // setimage(result);
+    sessionStorage.setItem('recoverPhoto', result);
+  };
+
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
     });
 
-    var ios = false;
-
-    const camera = useRef();
-
-    const shot = () => {
-        let secondsTmp = 3;
-        let timer = setInterval(() => {
-            if (secondsTmp === 0) {
-                var canvas = document.createElement("canvas");
-                canvas.width = cameraSize.width;
-                canvas.height = cameraSize.height;
-                canvas.getContext("2d").drawImage(camera.current, 0, 0, cameraSize.width, cameraSize.height);
-
-                setimage(canvas.toDataURL());
-                setSeconds(3);
-                setNoPhoto(false)
-                setOk(true)
-                sessionStorage.setItem('recoverPhoto', canvas.toDataURL())
-                clearInterval(timer);
-            } else {
-                setSeconds((prev) => prev - 1);
-                secondsTmp -= 1;
-            }
-        }, 1000);
-    };
-
-    useEffect(() => {
-        init()
-        const getm = getMobileOperatingSystem
-        if (getm === "iOS") {
-            ios = true;
-        }
-    }, [])
-
-    const onChangeFile = async (e) => {
-        const file = e.currentTarget.files[0];
-        const result = await toBase64(file).catch(e => Error(e));
-        setimage(result)
-        sessionStorage.setItem('recoverPhoto', result)
+  const init = async () => {
+    const recoverPhoto = sessionStorage.getItem('recoverPhoto');
+    if (recoverPhoto) {
+      //   setimage(recoverPhoto);
     }
+  };
 
-    const toBase64 = file => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
+  let inpFile = null;
 
-    const init = async () => {
-        const recoverPhoto = sessionStorage.getItem('recoverPhoto')
-        if (recoverPhoto) {
-            setimage(recoverPhoto)
-        }
-    }
+  if (ok) return <Redirect to='/formPart3' />;
 
-    let inpFile = null
+  return (
+    <div className={css.base_container}>
+      <Back to='/formPart1' />
+      <div className={css.header}>Подтвердите свою личность</div>
+      <div className={css.content}>
+        {isCamera ? (
+          <div>
+            <Webcam className={css.image} ref={camera} playsInline />
+          </div>
+        ) : (
+          <div>
+            {photo ? (
+              <img className={css.image} src={photo} alt='photo' />
+            ) : (
+              <img className={css.image} src={EmptyPhoto} alt='nophoto' />
+            )}
+          </div>
+        )}
 
-    if (ok) return <Redirect to="/formPart3" />
+        {!isCamera && !photo && <div>Необходимо добавить фото</div>}
 
-    return (
-        <div className={css.base_container}>
-            <Back to='/formPart1' />
-            <div className={css.header}>Подтвердите свою личность</div>
-            <div className={css.content}>
-                {
-                    !noPhoto ? (
-                        <div>
-                            <div>
-                                <img className={css.image} src={image} alt="nophoto" />
-                            </div>
-                            <div className={css.label}>
-                                <label>Необходимо добавить фото</label>
-                            </div>
-                            <div className={css.smile}>
-                                <img src={smile} alt="smile" />
-                            </div>
-                            <div className={css.buttons}>
-                                {
-                                    !ios ? (
-                                        <div>
-                                            <Link to='#' className={css.buttons} onClick={
-                                                () => {
-                                                    setNoPhoto(true)
-                                                    setIsCamera(true)
-                                                    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                                                        navigator.mediaDevices
-                                                            .getUserMedia({ video: true })
-                                                            .then(function (stream) {
-                                                                camera.current.srcObject = stream;
-                                                                camera.current.play();
-                                                                const { width, height } = stream.getTracks()[0].getSettings();
-                                                                setCameraSize({
-                                                                    width,
-                                                                    height
-                                                                });
-                                                            });
-                                                    }
-                                                }
-                                            }>Сфотографироваться</Link>
-                                            <input
-                                                type="file"
-                                                accept="video/*"
-                                                capture="camera"
-                                                onChange={onChangeFile}
-                                                style={{ display: 'none' }}
-                                            ></input>
-                                        </div>
-                                    ) :
-                                        (<Link to='#' className={css.buttons} onClick={
-                                            () => {
-                                                setNoPhoto(true)
-                                                setIsCamera(true)
-                                                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                                                    navigator.mediaDevices
-                                                        .getUserMedia({ video: true })
-                                                        .then(function (stream) {
-                                                            camera.current.srcObject = stream;
-                                                            camera.current.play();
-                                                            const { width, height } = stream.getTracks()[0].getSettings();
-                                                            setCameraSize({
-                                                                width,
-                                                                height
-                                                            });
-                                                        });
-                                                }
-                                            }
-                                        }>Сфотографироваться</Link>)
-                                }
-                            </div>
-                        </div>
+        {isCamera && (
+          <div className={css.takePhotoButton}>
+            <p>Наведите камеру так, чтобы лицо поместилось в круг</p>
+            {takeing && <p>{secondRemaining}</p>}
+            <button type='button' className={css.smile}>
+              <img
+                style={{ cursor: 'pointer' }}
+                onClick={takePhoto}
+                src={smile}
+                alt='smile'
+              />
+            </button>
+          </div>
+        )}
 
-                    ) : (
-                        <div className={css.app}>
-                            <video className={css.image} ref={camera} width="340" height="340" autoplay></video>
-                            <div className={css.label}>
-                                <label>Наведите камеру так, чтобы лицо поместилось в круг</label>
-                            </div>
-                            <h1 className={css.timer}>{seconds}</h1>
-                            <div className={css.smile}>
-                                <img src={smile} alt="smile" />
-                            </div>
-                            <div className={css.buttons}>
-                                <Link to="#" className={css.buttons} onClick={() => { shot() }}>Сделать фото</Link>
-                            </div>
-                        </div>
-                    )
-                }
-                <div className={css.nextBtn}>
-                    <Button
-                        to={
-                            sessionStorage.getItem("recoverPhoto") ?
-                                '/formPart3' :
-                                '#'
-                        }
-                    >Далее</Button>
-                </div>
-                <form id="idregform" name="regform" action="" enctype="multipart/form-data">
-                    <input
-                        onChange={onChangeFile}
-                        style={{ display: 'none' }}
-                        type="file"
-                        id="fileimg"
-                        ref={(inp) => inpFile = inp}
-                        accept="image/x-png,image/gif,image/jpeg"
-                    >
-                    </input>
-                    <div className={css.buttons}>
-                        <Link to='#' className={css.buttons} onClick={
-                            () => { inpFile.click() }}>
-                            Загрузить фото</Link>
-                    </div>
-                </form>
+        {!isCamera && !takeScreenshot && (
+          <div>
+            <button
+              className={css.startPhoto}
+              onClick={() => {
+                setIsCamera(true);
+              }}
+            >
+              Сфотографироваться
+            </button>
+          </div>
+        )}
+
+        {takeScreenshot && (
+          <div className={css.takePhotoButton}>
+            <p>Операция завершена успешно</p>
+            <div className={css.smile}>
+              <img src={validateIcon} alt='smile' />
             </div>
+          </div>
+        )}
+
+        <div className={css.nextBtn}>
+          <Button
+            disabled={!takeScreenshot}
+            to={takeScreenshot && '/formPart3'}
+          >
+            Далее
+          </Button>
         </div>
-    )
-}
+
+        {!isCamera && photo && (
+          <div>
+            <button
+              className={css.startPhoto}
+              onClick={() => {
+                setSeconds(3);
+                sessionStorage.removeItem('recoverPhoto');
+                setIsCamera(true);
+                setScreenshot(false);
+                setPhoto('');
+              }}
+            >
+              Сфотографироваться заново
+            </button>
+          </div>
+        )}
+        <form
+          id='idregform'
+          name='regform'
+          action=''
+          enctype='multipart/form-data'
+        >
+          <input
+            onChange={onChangeFile}
+            style={{ display: 'none' }}
+            type='file'
+            id='fileimg'
+            ref={(inp) => (inpFile = inp)}
+            accept='image/x-png,image/gif,image/jpeg'
+          ></input>
+          <div className={css.buttons}>
+            <Link
+              to='#'
+              className={css.buttons}
+              onClick={() => {
+                inpFile.click();
+              }}
+            >
+              Загрузить фото
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default FormPart2;

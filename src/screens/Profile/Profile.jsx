@@ -12,6 +12,7 @@ import Modal from '../../components/Modal/Modal';
 import Spinner from '../../components/Spinner/Spinner';
 
 const Profile = () => {
+  // eslint-disable-next-line
   const [save, setSave] = useState(false);
   const [title, setTitle] = useState('Ошибка');
   const [openModal, setOpenModal] = useState(false);
@@ -100,6 +101,7 @@ const Profile = () => {
   useEffect(() => {
     init();
     getSubData();
+    // eslint-disable-next-line
   }, []);
 
   const getSubData = async () => {
@@ -124,11 +126,12 @@ const Profile = () => {
         {!loadingData ? (
           <div>
             <div className={css.links}>
-              <div className={css.uface}>
+              {/* <div className={css.uface}>
                 <Link className={css.uface} to='/profile'>
                   Кабинет Uface
                 </Link>
-              </div>
+              </div> */}
+              <div className={css.cabinetText}>Кабинет Uface</div>
               <div className={css.closeBtn}>
                 <button
                   className={css.closeImg}
@@ -579,6 +582,7 @@ function validateName(value) {
 
 function validateEmail(email) {
   const re =
+    // eslint-disable-next-line
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }

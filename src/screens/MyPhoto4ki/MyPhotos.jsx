@@ -5,8 +5,9 @@ import Back from '../../components/Back/Back';
 import request from '../../request';
 import Modal from '../../components/Modal/Modal';
 import Spinner from '../../components/Spinner/Spinner';
+// import { getCountryCallingCode } from 'react-phone-number-input';
 
-const MyPhotos = () => {
+const MyPhotos = ({ history }) => {
   // Init
   const [loadingData, setLoadingData] = useState(false);
   // Modal
@@ -30,6 +31,7 @@ const MyPhotos = () => {
 
   useEffect(() => {
     init();
+    // eslint-disable-next-line
   }, []);
 
   const init = async () => {
@@ -58,6 +60,9 @@ const MyPhotos = () => {
       }
       if (mainPhotoRes.status === 'success') {
         setMainPhoto(mainPhotoRes.imagedesc);
+      } else {
+        console.log(`Делаем редирект`);
+        history.push('/login');
       }
       setLoadingData(false);
     } catch (error) {
@@ -80,9 +85,14 @@ const MyPhotos = () => {
           .drawImage(camera.current, 0, 0, cameraSize.width, cameraSize.height);
         try {
           clearInterval(timer);
+          const tracks = camera.current.srcObject.getTracks();
+          tracks.forEach(function (track) {
+            track.stop();
+          });
           setCameraEnable(null);
           setSeconds(3);
           uploadBase64(canvas.toDataURL(), cameraNumber);
+          return canvas.toDataURL();
         } catch (error) {
           console.log('errRes: ', error);
         }
@@ -125,7 +135,17 @@ const MyPhotos = () => {
 
   return (
     <div className={css.base_container}>
-      <Back to='/profile' />
+      <Back
+        to='/profile'
+        onclick={() => {
+          const tracks = camera.current?.srcObject.getTracks();
+          console.log({ tracks });
+          tracks?.forEach(function (track) {
+            track.stop();
+          });
+          setCameraEnable(null);
+        }}
+      />
       <div className={css.header}>Мои фото</div>
       <div>
         {mainPhoto && (
@@ -134,11 +154,11 @@ const MyPhotos = () => {
       </div>
       <div className={css.grid}>
         {photos.map((photo, photoIndex) => (
-          <>
+          <div className={css.extPhotoItem} key={photo.faceid}>
             {!(
               typeof cameraEnable === 'number' && cameraEnable === photoIndex
             ) ? (
-              <div>
+              <div className={css.ImageDiv}>
                 <img
                   className={css.image}
                   src={photo.base64 || photoExample}
@@ -146,13 +166,13 @@ const MyPhotos = () => {
                 />
               </div>
             ) : (
-              <div>
+              <div className={css.ImageDiv}>
                 <video
                   className={css.video}
                   ref={camera}
                   width='340'
                   height='340'
-                  autoplay
+                  autoPlay
                 ></video>
               </div>
             )}
@@ -210,13 +230,14 @@ const MyPhotos = () => {
                     Сделать фото
                   </button>
                   <button
-                    onClick={async () => {
+                    onClick={async (e) => {
+                      console.log({ photo });
                       try {
                         const data = await request.deletePhoto(
                           `persident/folkimgext?faceid=${photo.faceid}`
                         );
+                        console.log(data);
                         if (data.status !== 'error') {
-                          console.log(data);
                           setOpenModal(true);
                           setTitle('Успешно');
                           init();
@@ -244,7 +265,7 @@ const MyPhotos = () => {
                 </>
               )}
             </div>
-          </>
+          </div>
         ))}
       </div>
       <Modal

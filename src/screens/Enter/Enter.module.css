@@ -1,67 +1,73 @@
 .header {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 34px;
-    line-height: 38px;
-    letter-spacing: 0.374px;
-    margin-bottom: 51px;
-    margin-top: 61px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 34px;
+  line-height: 38px;
+  letter-spacing: 0.374px;
+  margin-bottom: 51px;
+  margin-top: 61px;
 }
 
 .label {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 38px;
-    text-align: left;
-    margin-left: 40px;
-    margin-bottom: 5px;
-    margin-top: 9px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 38px;
+  text-align: left;
+  margin-left: 40px;
+  margin-bottom: 5px;
+  margin-top: 9px;
 }
 
-.passLink:hover, .passLink:visited:hover, .registration:hover, .registration:visited:hover {
-    text-decoration: underline;
-    font-weight: 500;
+.passLink:hover,
+.passLink:visited:hover,
+.registration:hover,
+.registration:visited:hover {
+  text-decoration: underline;
 }
 
-.passLink:visited, .registration:visited {
-    text-decoration: none;
-    color: #828088;
+.passLink:visited,
+.registration:visited {
+  text-decoration: none;
+  color: #828088;
 }
 
 .passLink {
-    color: #828088;
-    text-decoration: none;
-    margin-top: 20px;
-    margin-bottom: 100px; 
-    text-align: right;
-    margin-right: 15px;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 17px;
-    line-height: 24px;
-}
-
-.passLink2 {
-    color: #828088;
-    text-decoration: none;
-    margin-top: 20px;
-    text-align: right;
-    margin-right: 15px;
-    font-weight: 500;
-    font-size: 17px;
-    line-height: 24px;
+  color: #828088;
+  text-decoration: none;
+  margin-top: 20px;
+  margin-bottom: 100px;
+  text-align: right;
+  margin-right: 10px;
+  font-style: normal;
+  font-weight: 400;
+  font-family: 'Montserrat';
+  font-size: 17px;
+  line-height: 24px;
 }
 
 .regBtn {
-    margin-top: 20px;
+  margin-top: 20px;
+}
+
+.passLink2 {
+  color: #828088;
+  text-decoration: none;
+  margin-top: 20px;
+  text-align: right;
+  margin-right: 13px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .registration {
-    font-weight: 600;
-    color: #828088;
+  font-weight: 600;
+  color: #828088;
+  text-decoration: underline;
+  font-weight: 600;
 }
 
 .formInput {
-    margin-bottom: 100px;
+  margin-bottom: 100px;
 }

@@ -21,11 +21,13 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "react-text-mask": "^5.4.3",
+    "react-webcam": "^6.0.0",
     "styled-components": "^5.3.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
+    "local-start": "HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

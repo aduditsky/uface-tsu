@@ -6,12 +6,13 @@
   width: 100%;
 }
 
-.image {
-  width: 100%;
-}
-
 .image img {
   width: 193px;
+  height: auto;
+}
+
+.faceelook,
+.tsuLogo {
   height: auto;
 }
 
@@ -112,19 +113,18 @@
   color: #169a33;
 }
 
-@media (max-width: 380px) {
+/* @media (max-width: 380px) {
   .faceelook,
   .tsuLogo {
-    /* width: 194px;
-    height: 222px; */
+    width: 194px;
+    height: 222px;
   }
-}
+} */
 
 @media (max-width: 420px) {
   .faceelook,
   .tsuLogo {
     width: 194px;
-    height: 222px;
   }
 }
 

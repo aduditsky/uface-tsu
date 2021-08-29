@@ -30,8 +30,7 @@ const FormPart3 = () => {
 
   const camera = useRef();
 
-  function shot(e) {
-    e.preverntDefault();
+  function shot() {
     let secondsTmp = 3;
     let timer = setInterval(() => {
       if (secondsTmp === 0) {
@@ -48,6 +47,7 @@ const FormPart3 = () => {
         setNewPhoto(false);
         setNextBtn(false);
         sessionStorage.setItem('recoverPhoto', canvas.toDataURL());
+        return canvas.toDataURL();
         clearInterval(timer);
       } else {
         setSeconds((prev) => prev - 1);

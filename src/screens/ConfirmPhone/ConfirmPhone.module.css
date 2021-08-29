@@ -1,0 +1,12 @@
+.inputbox {
+  padding: 15px;
+  min-height: fit-content;
+}
+
+.inputbox input:focus ~ .label,
+.inputbox input:valid ~ .label {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  font-size: 20px;
+}

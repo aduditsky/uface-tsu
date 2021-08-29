@@ -12,7 +12,6 @@
 .video {
   object-fit: cover;
   border-radius: 200px;
-  margin-bottom: 23px;
 }
 
 .image {
@@ -21,8 +20,8 @@
 }
 
 .video {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
 }
 
 .mainImage {
@@ -36,8 +35,19 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   align-items: center;
+}
+
+.extPhotoItem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 23px;
+  grid-gap: 11px;
+}
+
+.extPhotoItem .ImageDiv {
+  width: fit-content;
 }
 
 .options {

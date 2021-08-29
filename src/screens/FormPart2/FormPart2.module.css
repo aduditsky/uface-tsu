@@ -1,88 +1,110 @@
 .header {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 18px;
-    color: #2C2C2C;
-    margin-bottom: 47px;
-    margin-top: 38px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  color: #2c2c2c;
+  margin-bottom: 47px;
+  margin-top: 38px;
 }
 
 .image {
-   width: 276px;
-   height: 276px;
-   object-fit: cover;
-   border-radius: 200px;
-   margin-bottom: 23px;
+  width: 276px;
+  height: 276px;
+  object-fit: cover;
+  border-radius: 200px;
+  margin-bottom: 23px;
 }
 
-.buttons
-{
-    margin-bottom: 15px;
-    font-weight: 700;
-    font-style: normal;
-    font-size: 20px;
-    line-height: 24px;
-    color: #2C2C2C;
-    text-decoration: none;
+.buttons {
+  margin-bottom: 15px;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 24px;
+  color: #2c2c2c;
+  text-decoration: none;
 }
 
 .buttons:visited {
-    text-decoration: none;
-    color: #2C2C2C;
+  text-decoration: none;
+  color: #2c2c2c;
 }
 
-.buttons:visited:hover, .buttons:hover {
-    opacity: 0.8;
-    font-weight: 500;
-    text-decoration: underline;
+.buttons:visited:hover,
+.buttons:hover {
+  opacity: 0.8;
+  text-decoration: underline;
 }
 
 .nextBtn {
-    margin-top: 25px;
-    margin-bottom: 10px;
-    font-size: 18px;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 
 .label {
-    margin-left: 33px;
-    margin-right: 33px;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 28px;
-    color: #828088;
-    margin-bottom: 28px;
+  margin-left: 33px;
+  margin-right: 33px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 28px;
+  color: #828088;
+  margin-bottom: 28px;
 }
 
 .ok_icon {
-    width: 49px;
-    height: 49px;
+  width: 49px;
+  height: 49px;
 }
 
 .app {
-    text-align: center;
+  text-align: center;
 }
 
 .smile {
-    margin-bottom: 40px;
+  border: none;
+  background: none;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.startPhoto {
+  border: none;
+  background: none;
+  width: fit-content;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+  cursor: pointer;
+  font-family: 'Montserrat';
+  margin-top: 10px;
+}
+
+.startPhoto:hover {
+  text-decoration: underline;
 }
 
 .timer {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
-@media (max-width: 400px)
-{ 
-    .header {
-        margin-bottom: 15px;
-        margin-top: 20px;
-    }
-    
-    .image {
-       width: 200px;
-       height: 200px;
-       border-radius: 180px;
-    }
+/* Новые классы */
+
+.takePhotoButton {
+  display: flex;
+  flex-direction: column;
 }
 
+@media (max-width: 400px) {
+  .header {
+    margin-bottom: 15px;
+    margin-top: 20px;
+  }
 
+  .image {
+    width: 200px;
+    height: 200px;
+    border-radius: 180px;
+  }
+}
