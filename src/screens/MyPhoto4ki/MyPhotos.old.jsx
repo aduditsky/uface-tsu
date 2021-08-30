@@ -6,19 +6,9 @@ import request from '../../request';
 import Modal from '../../components/Modal/Modal';
 import Spinner from '../../components/Spinner/Spinner';
 // import { getCountryCallingCode } from 'react-phone-number-input';
-import Webcam from 'react-webcam';
 
 const MyPhotos = ({ history }) => {
   // Init
-  const [isCamera, setIsCamera] = useState(false);
-  const [takeScreenshot, setScreenshot] = useState(false);
-  const [cameraType, setCameraType] = useState();
-  const [takeing, setTakeIn] = useState(false);
-  const [photo, setPhoto] = useState(
-    sessionStorage.getItem('recoverPhoto') || ''
-  );
-  const [ok, setOk] = useState(false);
-  const [secondRemaining, setSeconds] = useState(3);
   const [loadingData, setLoadingData] = useState(false);
   // Modal
   const [title, setTitle] = useState('');
@@ -28,7 +18,13 @@ const MyPhotos = ({ history }) => {
   const [mainPhoto, setMainPhoto] = useState(null);
   const [photos, setPhotos] = useState([]);
   // Camera
-  const camera = useRef(null);
+  const camera = useRef();
+  const [cameraSize, setCameraSize] = useState({
+    width: 0,
+    height: 0,
+  });
+  const [cameraEnable, setCameraEnable] = useState(null);
+  const [seconds, setSeconds] = useState(3);
   // UploadPhoto
   let inpFile = null;
   const [photoNumber, setPhotoNumber] = useState(null);
@@ -37,30 +33,6 @@ const MyPhotos = ({ history }) => {
     init();
     // eslint-disable-next-line
   }, []);
-
-  const uploadBase64 = async (result, number) => {
-    setLoadingData(true);
-    try {
-      const data = await request.postAuth('persident/folkimgext', [
-        ['img64', result],
-        ['faceid', photos[number].faceid || ''],
-      ]);
-      if (data.status === 'success') {
-        console.log(data);
-      } else if (data.status !== 'success') {
-        setOpenModal(true);
-        setTitle('Ошибка');
-        setTextError(data.errordesc);
-      } else {
-        console.log(data);
-      }
-    } catch (error) {
-      setTitle('Ошибка');
-      setTextError(String(error));
-      setOpenModal(true);
-    }
-    init();
-  };
 
   const init = async () => {
     setLoadingData(true);
@@ -100,34 +72,36 @@ const MyPhotos = ({ history }) => {
     }
   };
 
-  function takePhoto() {
-    console.log(`Начало фотографии`);
-    let timeToScreenshot = secondRemaining;
+  const shot = async (cameraNumber) => {
+    let secondsTmp = 3;
+    let timer = setInterval(async () => {
+      if (secondsTmp === 0) {
+        var canvas = document.createElement('canvas');
 
-    setTakeIn(true);
-    let timer = setInterval(() => {
-      if (timeToScreenshot === 0) {
-        let photoBase64 = camera.current.getScreenshot();
-
-        console.log({ photoBase64 });
-
-        sessionStorage.setItem('extPhoto', photoBase64);
-        setPhoto(photoBase64);
-
-        setTakeIn(false);
-        setIsCamera(false);
-        setScreenshot(true);
-        setCameraType();
-
-        clearInterval(timer);
-
-        uploadBase64(photoBase64, cameraType);
+        canvas.width = cameraSize.width;
+        canvas.height = cameraSize.height;
+        canvas
+          .getContext('2d')
+          .drawImage(camera.current, 0, 0, cameraSize.width, cameraSize.height);
+        try {
+          clearInterval(timer);
+          const tracks = camera.current.srcObject.getTracks();
+          tracks.forEach(function (track) {
+            track.stop();
+          });
+          setCameraEnable(null);
+          setSeconds(3);
+          uploadBase64(canvas.toDataURL(), cameraNumber);
+          return canvas.toDataURL();
+        } catch (error) {
+          console.log('errRes: ', error);
+        }
       } else {
-        setSeconds((prev) => prev - 1);
-        timeToScreenshot -= 1;
+        secondsTmp -= 1;
+        setSeconds(secondsTmp);
       }
     }, 1000);
-  }
+  };
 
   const uploadFile = async (e) => {
     const file = e.currentTarget.files[0];
@@ -135,9 +109,43 @@ const MyPhotos = ({ history }) => {
     uploadBase64(result, photoNumber);
   };
 
+  const uploadBase64 = async (result, number) => {
+    setLoadingData(true);
+    try {
+      const data = await request.postAuth('persident/folkimgext', [
+        ['img64', result],
+        ['faceid', photos[number].faceid || ''],
+      ]);
+      if (data.status === 'success') {
+        console.log(data);
+      } else if (data.status !== 'success') {
+        setOpenModal(true);
+        setTitle('Ошибка');
+        setTextError(data.errordesc);
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      setTitle('Ошибка');
+      setTextError(String(error));
+      setOpenModal(true);
+    }
+    init();
+  };
+
   return (
     <div className={css.base_container}>
-      <Back to='/profile' />
+      <Back
+        to='/profile'
+        onclick={() => {
+          const tracks = camera.current?.srcObject.getTracks();
+          console.log({ tracks });
+          tracks?.forEach(function (track) {
+            track.stop();
+          });
+          setCameraEnable(null);
+        }}
+      />
       <div className={css.header}>Мои фото</div>
       <div>
         {mainPhoto && (
@@ -147,41 +155,31 @@ const MyPhotos = ({ history }) => {
       <div className={css.grid}>
         {photos.map((photo, photoIndex) => (
           <div className={css.extPhotoItem} key={photo.faceid}>
-            {!isCamera ? (
+            {!(
+              typeof cameraEnable === 'number' && cameraEnable === photoIndex
+            ) ? (
               <div className={css.ImageDiv}>
                 <img
                   className={css.image}
                   src={photo.base64 || photoExample}
                   alt='nophoto'
                 />
-              </div>
-            ) : photoIndex === cameraType ? (
-              <div className={css.ImageDiv}>
-                <Webcam className={css.image} ref={camera} playsInline />
               </div>
             ) : (
               <div className={css.ImageDiv}>
-                <img
-                  className={css.image}
-                  src={photo.base64 || photoExample}
-                  alt='nophoto'
-                />
+                <video
+                  className={css.video}
+                  ref={camera}
+                  width='340'
+                  height='340'
+                  autoPlay
+                ></video>
               </div>
             )}
             <div className={css.options}>
-              {isCamera && cameraType === photoIndex ? (
-                <>
-                  <h1>{secondRemaining}</h1>
-                  <button
-                    className={css.update}
-                    onClick={() => {
-                      takePhoto();
-                    }}
-                  >
-                    Сфотографироваться
-                  </button>
-                </>
-              ) : (
+              {!(
+                typeof cameraEnable === 'number' && cameraEnable === photoIndex
+              ) ? (
                 <>
                   <button
                     className={css.update}
@@ -207,9 +205,25 @@ const MyPhotos = ({ history }) => {
                   </button>
                   <button
                     onClick={() => {
-                      setIsCamera(true);
-                      setCameraType(photoIndex);
-                      console.log(`Выбрана камера ` + photoIndex);
+                      if (
+                        navigator.mediaDevices &&
+                        navigator.mediaDevices.getUserMedia
+                      ) {
+                        navigator.mediaDevices
+                          .getUserMedia({ video: true })
+                          .then(function (stream) {
+                            setCameraEnable(photoIndex);
+                            camera.current.srcObject = stream;
+                            camera.current.play();
+                            const { width, height } = stream
+                              .getTracks()[0]
+                              .getSettings();
+                            setCameraSize({
+                              width,
+                              height,
+                            });
+                          });
+                      }
                     }}
                     className={css.update}
                   >
@@ -237,6 +251,16 @@ const MyPhotos = ({ history }) => {
                     className={css.update}
                   >
                     Удалить
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h1>{seconds}</h1>
+                  <button
+                    className={css.update}
+                    onClick={() => shot(photoIndex)}
+                  >
+                    Сфотографироваться
                   </button>
                 </>
               )}

@@ -25,7 +25,7 @@ const FormPart2 = () => {
   //   });
   const camera = useRef(null);
   function takePhoto() {
-    console.log(`Начало фотографии`);
+    // console.log(`Начало фотографии`);
     let timeToScreenshot = secondRemaining;
 
     setTakeIn(true);
@@ -54,7 +54,8 @@ const FormPart2 = () => {
   const onChangeFile = async (e) => {
     const file = e.currentTarget.files[0];
     const result = await toBase64(file).catch((e) => Error(e));
-    // setimage(result);
+    // react-cropper
+    setPhoto(result);
     sessionStorage.setItem('recoverPhoto', result);
   };
 
@@ -69,9 +70,15 @@ const FormPart2 = () => {
   const init = async () => {
     const recoverPhoto = sessionStorage.getItem('recoverPhoto');
     if (recoverPhoto) {
-      //   setimage(recoverPhoto);
+      setPhoto(recoverPhoto);
     }
   };
+
+  useEffect(() => {
+    if (sessionStorage.getItem('recoverPhoto')) {
+      setScreenshot(true);
+    }
+  }, []);
 
   let inpFile = null;
 
@@ -138,7 +145,47 @@ const FormPart2 = () => {
         <div className={css.nextBtn}>
           <Button
             disabled={!takeScreenshot}
-            to={takeScreenshot && '/formPart3'}
+            to='#'
+            // to={takeScreenshot && '/formPart3'}
+            // onclick={async () => {
+            //   try {
+            //     setNextBtn(true);
+            //     const json = JSON.parse(sessionStorage.getItem('recoverData'));
+            //     setLoading(true);
+            //     const data = await request.post('persident/folkreg', [
+            //       [
+            //         'fio',
+            //         `${json.lastName} ${json.firstName} ${json.patronymic}`,
+            //       ],
+            //       ['phone', json.phone],
+            //       ['pwd', json.password],
+            //       ['email', json.email],
+            //       ['dateborn', json.dateborn],
+            //       ['folkrole', json.role],
+            //       ['institute', json.institute],
+            //       ['img64', sessionStorage.getItem('recoverPhoto')],
+            //  Тут надо парсить ссылку на компонент ConfirmEmail из App.js
+            //       [
+            //         'regactivatelink',
+            //         'https://uface.su/#/ConfirmAccountFromMail/',
+            //       ],
+            //     ]);
+            //     if (data.status !== 'error') {
+            //       setLoading(false);
+            //       console.log(data);
+            //       setSuccess(true);
+            //     } else {
+            //       setLoading(false);
+            //       setOpenModal(true);
+            //       setTextError(data.errordesc);
+            //       console.log(data);
+            //     }
+            //   } catch (error) {
+            //     console.log('error: ', error);
+            //     setOpenModal(true);
+            //     setTextError(error);
+            //   }
+            // }}
           >
             Далее
           </Button>
