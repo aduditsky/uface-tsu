@@ -13,16 +13,12 @@ const FormPart2 = () => {
   const [takeScreenshot, setScreenshot] = useState(false);
   const [takeing, setTakeIn] = useState(false);
   const [photo, setPhoto] = useState(
-    sessionStorage.getItem('recoverPhoto') || ''
+    sessionStorage.getItem('recoverPhoto') || null
   );
-  const [ok, setOk] = useState(false);
-  const [debugPhoto, setDebugPhoto] = useState('');
   const [secondRemaining, setSeconds] = useState(3);
-  //   const [isIOS, setIOS] = useState(false);
-  //   const [cameraSize, setCameraSize] = useState({
-  //     width: 0,
-  //     height: 0,
-  //   });
+
+  const [ok, setOk] = useState(false);
+
   const camera = useRef(null);
   function takePhoto() {
     // console.log(`Начало фотографии`);
@@ -37,7 +33,6 @@ const FormPart2 = () => {
 
         sessionStorage.setItem('recoverPhoto', photoBase64);
         setPhoto(photoBase64);
-        setDebugPhoto(photoBase64);
 
         setTakeIn(false);
         setIsCamera(false);
@@ -54,8 +49,10 @@ const FormPart2 = () => {
   const onChangeFile = async (e) => {
     const file = e.currentTarget.files[0];
     const result = await toBase64(file).catch((e) => Error(e));
+
     // react-cropper
     setPhoto(result);
+    setScreenshot(true);
     sessionStorage.setItem('recoverPhoto', result);
   };
 
