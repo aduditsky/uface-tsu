@@ -1,5 +1,7 @@
 .header {
   margin-top: 30px;
+  margin-left: 16px;
+  text-align: left;
   font-style: normal;
   font-weight: bold;
   font-size: 34px;
@@ -24,6 +26,17 @@
   height: 150px;
 }
 
+.lines {
+  height: 90%;
+  width: auto;
+  left: -15%;
+  bottom: -32%;
+  border-radius: 0px;
+  position: fixed;
+  z-index: -1;
+  opacity: 0.3;
+}
+
 .mainImage {
   width: 230px;
   height: 230px;
@@ -35,10 +48,21 @@
 
 .grid {
   display: grid;
+  max-width: fit-content;
+  margin: auto;
   grid-template-columns: 1fr;
   align-items: center;
+  padding: 0 3%;
 }
 
+.photoInstruction {
+  color: #2c2c2c;
+  text-decoration: underline;
+  margin-top: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
 .extPhotoItem {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -54,14 +78,18 @@
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
+  margin-top: 12.5px;
 }
 
 .update {
+  margin: 0;
+  padding: 0;
   margin-bottom: 10px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 17px;
-  color: #2c2c2c;
+  line-height: 24px;
+  color: #828088;
   text-decoration: none;
   background: none;
   border: none;
@@ -69,13 +97,13 @@
   font-family: 'Montserrat';
   outline: none;
   text-align: left;
+  cursor: pointer;
 }
 
 .update:visited:hover,
 .update:hover {
   /* font-weight: 500; */
   text-decoration: underline;
-  cursor: pointer;
 }
 
 .timer {

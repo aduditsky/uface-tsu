@@ -1,50 +1,56 @@
-.select{
+.select {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
   appearance: none;
-  background: url('../../images/select_icon.svg') no-repeat right center  #F2F2F2;
-  background-position-x: 330px;
+  background: url('../../images/select_icon.svg') no-repeat right center #f2f2f2;
+  background-position-x: 305px;
   outline: 0;
   position: relative;
-  width: 360px;
+  width: 340px;
   height: 60px;
   border-radius: 26px 26px 5px 26px;
   border: none;
+  padding-left: 18px;
   padding-top: 20px;
-  padding-left: 12px;
+  padding-right: 15px;
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: normal;
   font-size: 17px;
   line-height: 21px;
-  color: #2C2C2C;
+  color: #2c2c2c;
 }
-.select:focus{
+
+.select:disabled {
+  color: #969696;
+  opacity: 0.5 !important;
+}
+
+.select:focus {
   outline: none;
 }
-.select_container{
-    display: block;
-    position: relative;
+.select_container {
+  display: block;
+  position: relative;
 }
 .label {
-    position: absolute;
-    height: 12px;
-    left: 20px;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 11px;
-    line-height: 13px;
-    color: #4A4A4A;
-    margin-top: 8px;
-  }
+  position: absolute;
+  height: 12px;
+  left: calc(19px + 18px);
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 13px;
+  color: #4a4a4a;
+  margin-top: 8px;
+}
 
-  @media (max-width: 768px)
- { 
+@media (max-width: 768px) {
   .select {
     font-size: 15px;
   }
   .label {
     font-size: 10px;
   }
- }
+}

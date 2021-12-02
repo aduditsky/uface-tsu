@@ -43,3 +43,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.cropper-view-box {
+  outline: 1px solid #fff !important;
+  outline-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.cropper-modal {
+  opacity: 0.95 !important;
+}
+
+.cropper-line,
+.cropper-point {
+  background-color: #fff !important;
+}

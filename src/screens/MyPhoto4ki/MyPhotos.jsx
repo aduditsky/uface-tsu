@@ -7,16 +7,25 @@ import Modal from '../../components/Modal/Modal';
 import Spinner from '../../components/Spinner/Spinner';
 // import { getCountryCallingCode } from 'react-phone-number-input';
 import Webcam from 'react-webcam';
+import PictureCropper from '../../components/Cropper/Cropper';
+import Lines from '../../images/lines/profile.svg';
+import { useHistory } from 'react-router-dom';
+import imageCompression from 'browser-image-compression';
 
-const MyPhotos = ({ history }) => {
+const MyPhotos = () => {
+  let history = useHistory();
   // Init
   const [isCamera, setIsCamera] = useState(false);
+  // eslint-disable-next-line
   const [takeScreenshot, setScreenshot] = useState(false);
   const [cameraType, setCameraType] = useState();
+  // eslint-disable-next-line
   const [takeing, setTakeIn] = useState(false);
-  const [photo, setPhoto] = useState(
-    sessionStorage.getItem('recoverPhoto') || ''
-  );
+  const [isLoadedPhoto, setLoadedPhoto] = useState(false);
+  // eslint-disable-next-line
+  const [photo, setPhoto] = useState('');
+  const [bufferPhoto, setBufferPhoto] = useState(null);
+  // eslint-disable-next-line
   const [ok, setOk] = useState(false);
   const [secondRemaining, setSeconds] = useState(3);
   const [loadingData, setLoadingData] = useState(false);
@@ -32,11 +41,17 @@ const MyPhotos = ({ history }) => {
   // UploadPhoto
   let inpFile = null;
   const [photoNumber, setPhotoNumber] = useState(null);
+  const [dataIlr, setDataIrl] = useState('');
 
   useEffect(() => {
     init();
     // eslint-disable-next-line
-  }, []);
+  }, [dataIlr]);
+
+  const updateCroppedPhoto = (photo) => {
+    setPhoto(photo);
+    uploadBase64(sessionStorage.getItem('recoverPhoto'), photoNumber);
+  };
 
   const uploadBase64 = async (result, number) => {
     setLoadingData(true);
@@ -46,7 +61,7 @@ const MyPhotos = ({ history }) => {
         ['faceid', photos[number].faceid || ''],
       ]);
       if (data.status === 'success') {
-        console.log(data);
+        // console.log(data);
       } else if (data.status !== 'success') {
         setOpenModal(true);
         setTitle('Ошибка');
@@ -62,54 +77,68 @@ const MyPhotos = ({ history }) => {
     init();
   };
 
+  const updateToken = async () => {
+    const data = await request.postToken('persident/folkreftok');
+    // console.log(data.rtid, data.tid);
+    localStorage.setItem('token', data.tid);
+    localStorage.setItem('rtoken', data.rtid);
+    if (data.status === 'error') {
+      history.push('/login');
+    }
+  };
+
   const init = async () => {
     setLoadingData(true);
     try {
       const mainPhotoRes = await request.getAuth('persident/folkimg');
-      const imgExt = await request.getAuth('persident/folkimgext');
-      if (imgExt.status === 'success') {
-        let photosResArr = [];
-        if (imgExt.photos.length >= 2) {
-          photosResArr = imgExt.photos;
-        } else if (imgExt.photos.length === 1) {
-          photosResArr = imgExt.photos;
-          photosResArr.push({
-            base64: '',
-            faceid: '',
-          });
-        } else {
-          photosResArr.push({
-            base64: '',
-            faceid: '',
-          });
-        }
-        console.log(photosResArr);
-        setPhotos(photosResArr);
-      }
       if (mainPhotoRes.status === 'success') {
         setMainPhoto(mainPhotoRes.imagedesc);
+        const imgExt = await request.getAuth('persident/folkimgext');
+        if (imgExt.status === 'success') {
+          let photosResArr = [];
+          if (imgExt.photos.length >= 2) {
+            photosResArr = imgExt.photos;
+          } else if (imgExt.photos.length === 1) {
+            photosResArr = imgExt.photos;
+            photosResArr.push({
+              base64: '',
+              faceid: '',
+            });
+          } else {
+            photosResArr.push({
+              base64: '',
+              faceid: '',
+            });
+          }
+          // console.log(photosResArr);
+          setPhotos(photosResArr);
+        }
+      } else if (localStorage.getItem('rtoken')) {
+        await updateToken();
+        setDataIrl('mainPhotoRes');
       } else {
-        console.log(`Делаем редирект`);
         history.push('/login');
+      }
+
+      if (mainPhotoRes.status === 'success') {
+        setMainPhoto(mainPhotoRes.imagedesc);
       }
       setLoadingData(false);
     } catch (error) {
       setTitle('Ошибка');
-      setTextError(String(error));
+      setTextError(error);
       setOpenModal(true);
     }
   };
 
   function takePhoto() {
-    console.log(`Начало фотографии`);
+    // console.log(`Начало фотографии`);
     let timeToScreenshot = secondRemaining;
 
     setTakeIn(true);
     let timer = setInterval(() => {
-      if (timeToScreenshot === 0) {
+      if (timeToScreenshot === 1) {
         let photoBase64 = camera.current.getScreenshot();
-
-        console.log({ photoBase64 });
 
         sessionStorage.setItem('extPhoto', photoBase64);
         setPhoto(photoBase64);
@@ -131,19 +160,47 @@ const MyPhotos = ({ history }) => {
 
   const uploadFile = async (e) => {
     const file = e.currentTarget.files[0];
-    const result = await toBase64(file).catch((e) => Error(e));
-    uploadBase64(result, photoNumber);
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1080,
+    };
+    try {
+      const compressedFile = await imageCompression(file, options);
+      const result = await toBase64(compressedFile).catch((e) => Error(e));
+
+      //Для дебагинга фото исходного
+      // await toBase64(file)
+      //   .catch((e) => Error(e))
+      //   .then((result) => console.log(result));
+
+      setBufferPhoto(result);
+      setLoadedPhoto(true);
+      // await uploadBase64(bufferPhoto, photoNumber);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className={css.base_container}>
       <Back to='/profile' />
+
+      {isLoadedPhoto && (
+        <PictureCropper
+          img={bufferPhoto}
+          callBackFunc={() => setLoadedPhoto(false)}
+          updateCropped={updateCroppedPhoto}
+        ></PictureCropper>
+      )}
+
+      <img src={Lines} className={css.lines} alt={`CoolLines`} />
       <div className={css.header}>Мои фото</div>
       <div>
         {mainPhoto && (
           <img className={css.mainImage} src={mainPhoto} alt='nophoto' />
         )}
       </div>
+
       <div className={css.grid}>
         {photos.map((photo, photoIndex) => (
           <div className={css.extPhotoItem} key={photo.faceid}>
@@ -157,7 +214,14 @@ const MyPhotos = ({ history }) => {
               </div>
             ) : photoIndex === cameraType ? (
               <div className={css.ImageDiv}>
-                <Webcam className={css.image} ref={camera} playsInline />
+                <Webcam
+                  screenshotQuality='1'
+                  screenshotFormat='image/jpeg'
+                  className={css.image}
+                  ref={camera}
+                  playsInline
+                  minScreenshotHeight={720}
+                />
               </div>
             ) : (
               <div className={css.ImageDiv}>
@@ -184,6 +248,7 @@ const MyPhotos = ({ history }) => {
               ) : (
                 <>
                   <button
+                    type='button'
                     className={css.update}
                     onClick={async () => {
                       setLoadingData(true);
@@ -197,6 +262,7 @@ const MyPhotos = ({ history }) => {
                     Сделать главной
                   </button>
                   <button
+                    type='button'
                     className={css.update}
                     onClick={() => {
                       setPhotoNumber(photoIndex);
@@ -206,10 +272,12 @@ const MyPhotos = ({ history }) => {
                     Загрузить фото
                   </button>
                   <button
+                    type='button'
                     onClick={() => {
                       setIsCamera(true);
+                      setSeconds(3);
                       setCameraType(photoIndex);
-                      console.log(`Выбрана камера ` + photoIndex);
+                      // console.log(`Выбрана камера ` + photoIndex);
                     }}
                     className={css.update}
                   >
@@ -217,12 +285,12 @@ const MyPhotos = ({ history }) => {
                   </button>
                   <button
                     onClick={async (e) => {
-                      console.log({ photo });
+                      // console.log({ photo });
                       try {
                         const data = await request.deletePhoto(
                           `persident/folkimgext?faceid=${photo.faceid}`
                         );
-                        console.log(data);
+                        // console.log(data);
                         if (data.status !== 'error') {
                           setOpenModal(true);
                           setTitle('Успешно');
@@ -243,6 +311,13 @@ const MyPhotos = ({ history }) => {
             </div>
           </div>
         ))}
+        <a
+          className={css.photoInstruction}
+          href='/photo-instruction.pdf'
+          target='_blank'
+        >
+          Как необходимо делать фото
+        </a>
       </div>
       <Modal
         open={openModal}

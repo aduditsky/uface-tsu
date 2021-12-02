@@ -1,0 +1,35 @@
+{
+  "files": {
+    "main.css": "./static/css/main.6e6a6ea7.chunk.css",
+    "main.js": "./static/js/main.9902d0db.chunk.js",
+    "main.js.map": "./static/js/main.9902d0db.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.a2d5b099.js",
+    "runtime-main.js.map": "./static/js/runtime-main.a2d5b099.js.map",
+    "static/css/2.2a338543.chunk.css": "./static/css/2.2a338543.chunk.css",
+    "static/js/2.625dd6d0.chunk.js": "./static/js/2.625dd6d0.chunk.js",
+    "static/js/2.625dd6d0.chunk.js.map": "./static/js/2.625dd6d0.chunk.js.map",
+    "index.html": "./index.html",
+    "static/css/2.2a338543.chunk.css.map": "./static/css/2.2a338543.chunk.css.map",
+    "static/css/main.6e6a6ea7.chunk.css.map": "./static/css/main.6e6a6ea7.chunk.css.map",
+    "static/js/2.625dd6d0.chunk.js.LICENSE.txt": "./static/js/2.625dd6d0.chunk.js.LICENSE.txt",
+    "static/media/Frame.bbc14869.svg": "./static/media/Frame.bbc14869.svg",
+    "static/media/back.9c94f039.svg": "./static/media/back.9c94f039.svg",
+    "static/media/close.75b48108.svg": "./static/media/close.75b48108.svg",
+    "static/media/eyeCloseImg.fa7e2e82.svg": "./static/media/eyeCloseImg.fa7e2e82.svg",
+    "static/media/eyeOpenImg.bc98ea8d.svg": "./static/media/eyeOpenImg.bc98ea8d.svg",
+    "static/media/faceelook.332fa3f0.png": "./static/media/faceelook.332fa3f0.png",
+    "static/media/photo.37862967.jpg": "./static/media/photo.37862967.jpg",
+    "static/media/profile.4bbd9a44.svg": "./static/media/profile.4bbd9a44.svg",
+    "static/media/Select.module.css": "./static/media/select_icon.07d7874a.svg",
+    "static/media/smile.4925f8fe.svg": "./static/media/smile.4925f8fe.svg",
+    "static/media/tsu_logo.dbfe536c.png": "./static/media/tsu_logo.dbfe536c.png",
+    "static/media/valid_icon.fce9a7c2.svg": "./static/media/valid_icon.fce9a7c2.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a2d5b099.js",
+    "static/css/2.2a338543.chunk.css",
+    "static/js/2.625dd6d0.chunk.js",
+    "static/css/main.6e6a6ea7.chunk.css",
+    "static/js/main.9902d0db.chunk.js"
+  ]
+}

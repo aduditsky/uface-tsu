@@ -54,6 +54,41 @@
   cursor: pointer;
 }
 
+.snameLabel {
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+}
+
+.passwordRequirements {
+  padding: 0;
+  width: 340px;
+  margin-left: calc(35px / 2);
+  margin-right: auto;
+  list-style: '- ';
+  padding-left: 8px;
+}
+
+.passwordRequirements li {
+  font-size: 11px;
+  color: #e93232;
+  text-align: left;
+}
+
+.disSnameLabel {
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  width: 340px;
+  text-align: left;
+  width: 100%;
+  color: #969696;
+}
+
 .my_profile {
   display: inline-flex;
 }
@@ -78,6 +113,30 @@
   height: 66px;
   border-radius: 128px;
   /* margin-bottom: 12px; */
+}
+
+.lines {
+  height: 80%;
+  width: auto;
+  left: -15%;
+  bottom: -20%;
+  border-radius: 0px;
+  position: fixed;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+.PhoneConfirm {
+  color: #4a4a4a;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.PhoneConfirm:hover {
+  color: #4a4a4a;
+  text-decoration: underline;
 }
 
 .options {
@@ -122,6 +181,22 @@
   padding: 0;
   font-family: 'Montserrat';
   outline: none;
+}
+
+.disabled_pass {
+  margin-bottom: 16px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 17px;
+  color: #d6d6d6;
+  text-decoration: none;
+  background: none;
+  border: none;
+  margin-top: 12px;
+  padding: 0;
+  font-family: 'Montserrat';
+  outline: none;
+  cursor: none;
 }
 
 .buttons {

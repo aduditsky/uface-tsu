@@ -5,13 +5,20 @@ import Select from '../../components/Select/Select';
 import { Link, Redirect } from 'react-router-dom';
 import photo from '../../images/no_photo.jpg';
 import closeBtn from '../../images/close.svg';
+import Lines from '../../images/lines/profile.svg';
 
 import request from '../../request';
-import PhoneInput from '../../components/PhoneInput/PhoneInput';
+import NewPhoneInput from '../../components/PhoneInput/PhoneInput';
 import Modal from '../../components/Modal/Modal';
 import Spinner from '../../components/Spinner/Spinner';
+import Isemail from 'isemail';
+import Loader from 'react-loader-spinner';
+
+// Импорты из конфига
+import { InstCode } from '../../config';
 
 const Profile = () => {
+  //   let history = useHistory();
   // eslint-disable-next-line
   const [save, setSave] = useState(false);
   const [title, setTitle] = useState('Ошибка');
@@ -32,26 +39,68 @@ const Profile = () => {
   const [institute, setInstitute] = useState('');
   const [role, setRole] = useState('');
   const [dateborn, setDateborn] = useState(new Date());
-  const [code, setCode] = useState('');
+  // const [code, setCode] = useState('');
   const [institutes, setinstitutes] = useState([]);
   const [folkroles, setfolkroles] = useState([]);
+  // eslint-disable-next-line
   const [sentCode, setsentCode] = useState(false);
   const [goLogin, setgoLogin] = useState(false);
   const [loading, setloading] = useState(false);
   const [loadingData, setloadingData] = useState(true);
   const [phoneTmp, setPhoneTmp] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [isSName, setIsSName] = useState(true);
+  const [lastSName, setLastSName] = useState(patronymic);
+
+  const [preEditData, setPreEditData] = useState({});
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  useEffect(() => {
+    init();
+    getSubData();
+    // eslint-disable-next-line
+  }, []);
 
   const init = async () => {
     setloadingData(true);
     const req = await request.getAuth('persident/folkdata');
-    console.log(req);
-    if (req.fio) {
-      const ln = req.fio.split(' ')[0];
-      const fn = req.fio.split(' ')[1];
-      const p = req.fio.split(' ')[2];
-      setLastName(ln);
-      setFirstName(fn);
-      setPatronymic(p);
+    // console.log({ req });
+    if (req.status === 'success') {
+      setLastName(req.lname);
+      setFirstName(req.fname);
+      setPatronymic(req.sname);
+      setLastSName(req.sname);
+      if (req.sname === '') {
+        setIsSName(false);
+      }
+      if (req.phone_approve === '1') {
+        setOkNumber(true);
+      }
+      setPhone('+' + req.phone);
+      sessionStorage.setItem('phoneConfirm', req.phone);
+      setPhoneTmp('+' + req.phone);
+      setEmail(req.email);
+      setRole(req.folkrole);
+      setDateborn(req.dateborn);
+      //Тут нужно будет добавить проверку, а похорошему кинуть ее в функцию запроса
+      setInstitute(req.institute);
+      const imgResponse = await request.getAuth('persident/folkimg');
+      if (imgResponse) {
+        setimage(imgResponse.imagedesc);
+        sessionStorage.setItem('mainPhoto', imgResponse.imagedesc);
+      }
+    } else if (localStorage.getItem('rtoken')) {
+      await updateToken();
+      const req = await request.getAuth('persident/folkdata');
+
+      setLastName(req.lname);
+      setFirstName(req.fname);
+      setPatronymic(req.sname);
+      setLastSName(req.sname);
+      if (req.sname === '') {
+        setIsSName(false);
+      }
       if (req.phone_approve === '1') {
         setOkNumber(true);
       }
@@ -66,65 +115,159 @@ const Profile = () => {
         setimage(imgResponse.imagedesc);
         sessionStorage.setItem('mainPhoto', imgResponse.imagedesc);
       }
-    } else {
-      if (localStorage.getItem('rtoken')) {
-        await updateToken();
-        const req = await request.getAuth('persident/folkdata');
-        const ln = req.fio.split(' ')[0];
-        const fn = req.fio.split(' ')[1];
-        const p = req.fio.split(' ')[2];
 
-        setLastName(ln);
-        setFirstName(fn);
-        setPatronymic(p);
-        if (req.phone_approve === '1') {
-          setOkNumber(true);
-        }
-        setPhone('+' + req.phone);
-        setPhoneTmp('+' + req.phone);
-        setEmail(req.email);
-        setRole(req.folkrole);
-        setDateborn(req.dateborn);
-        setInstitute(req.institute);
-        const imgResponse = await request.getAuth('persident/folkimg');
-        if (imgResponse) {
-          setimage(imgResponse.imagedesc);
-          sessionStorage.setItem('mainPhoto', imgResponse.imagedesc);
-        }
-      } else {
+      if (req.status === 'error') {
         setgoLogin(true);
       }
     }
+
+    // if (req.status === 'error') {
+    //   history.push('/login');
+    // }
+
     setloading(false);
     setloadingData(false);
   };
+
+  const updateToken = async () => {
+    const data = await request.postToken('persident/folkreftok');
+    // console.log(data.rtid, data.tid);
+    localStorage.setItem('token', data.tid);
+    localStorage.setItem('rtoken', data.rtid);
+  };
+
   useEffect(() => {
-    init();
-    getSubData();
+    // console.log({ preEditData });
+    if (!editMode) {
+      setLastName(preEditData.lname);
+      setFirstName(preEditData.fname);
+      setPatronymic(preEditData.sname);
+      setLastSName(preEditData.sname);
+      setDateborn(preEditData.dateborn);
+      if (preEditData.sname === '') {
+        setIsSName(false);
+      }
+      setOkNumber(preEditData.okNumber);
+      setPhone(preEditData.phone);
+      setPhoneTmp(preEditData.phone);
+      setEmail(preEditData.email);
+    } else {
+      setPreEditData({
+        lname: lastName,
+        fname: firstName,
+        sname: patronymic,
+        phone: phone,
+        email: email,
+        dateborn: dateborn,
+        okNumber: okNumber,
+      });
+    }
+    if (!isSName && lastSName.length > 0) {
+      setIsSName(true);
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [editMode]);
 
   const getSubData = async () => {
-    const dataInst = await request.get('persident/getinstitutes');
+    const dataInst = await request.getInst(InstCode);
     const dataFolk = await request.get('persident/getfolkroles');
     setinstitutes(dataInst);
     setfolkroles(dataFolk);
   };
-  const updateToken = async () => {
-    const data = await request.postToken('persident/folkreftok');
-    console.log(data.rtid, data.tid);
-    localStorage.setItem('token', data.tid);
-    localStorage.setItem('rtoken', data.rtid);
+
+  const ChangePasswordHandler = async () => {
+    setIsChangingPassword(true);
+    try {
+      const data = await request.postAuth('persident/pwdchange', [
+        ['oldpwd', password],
+        ['newpwd', newPassword],
+        ['confirmpwd', newPasswordR],
+      ]);
+      if (data.status !== 'error') {
+        setOpenModal(true);
+        setTitle('Успешно');
+        setTextError(data.desc);
+        setChangePwd(false);
+        seteditMode(false);
+        setIsChangingPassword(false);
+      } else {
+        setTitle('Ошибка');
+
+        setOpenModal(true);
+        setTextError(data.errordesc ? data.errordesc : data.desc);
+        setChangePwd(false);
+        setIsChangingPassword(false);
+      }
+    } catch (error) {
+      console.error('error: ', error);
+      setOpenModal(true);
+      setTextError(error.errordesc);
+      setIsChangingPassword(false);
+    }
   };
+
+  const ConfirmChangeData = async () => {
+    setIsEditing(true);
+    phone !== preEditData.phone && setOkNumber(false);
+    setPreEditData({
+      lname: lastName,
+      fname: firstName,
+      sname: patronymic,
+      phone: phone,
+      email: email,
+      dateborn: dateborn,
+      okNumber: okNumber,
+    });
+    try {
+      const data = await request.postAuth('persident/folkdata', [
+        ['fio', lastName + ' ' + firstName + ' ' + patronymic],
+        ['lname', lastName],
+        ['fname', firstName],
+        ['sname', patronymic],
+        ['phone', phone],
+        ['email', email],
+        ['dateborn', dateborn],
+        ['folkrole', role],
+        ['institute', institute],
+      ]);
+      if (data.status !== 'error') {
+        // console.log(data);
+        setOpenModal(true);
+        setTextError(data.desc);
+        setTitle('Успешно');
+        seteditMode(false);
+        setIsEditing(false);
+        if (phone !== phoneTmp) {
+          setOkNumber(false);
+        }
+      } else {
+        setTitle('Ошибка');
+        setOpenModal(true);
+        setIsEditing(false);
+        setTextError(data.error);
+        console.log(data);
+      }
+    } catch (error) {
+      console.error('error: ', error);
+      setOpenModal(true);
+      setIsEditing(false);
+      setTextError(error);
+    }
+  };
+
   if (goLogin) {
     return <Redirect to='/' />;
-  } else if (loading) {
+  }
+
+  if (loading) {
     return <div />;
-  } else {
-    return (
+  }
+
+  return (
+    !loading && (
       <div className={css.base_container}>
         {!loadingData ? (
-          <div>
+          <>
             <div className={css.links}>
               {/* <div className={css.uface}>
                 <Link className={css.uface} to='/profile'>
@@ -137,8 +280,8 @@ const Profile = () => {
                   className={css.closeImg}
                   onClick={async () => {
                     try {
-                      const data = await request.getAuth('persident/folkexit');
-                      console.log(data);
+                      await request.getAuth('persident/folkexit');
+                      // console.log(data);
                     } catch (error) {
                       console.error('error: ', error);
                     }
@@ -149,9 +292,10 @@ const Profile = () => {
                 </button>
               </div>
             </div>
+            <img src={Lines} className={css.lines} alt={`AnotherCoolLines`} />
             <div className={css.my_profile}>
               <div className={css.header}>Мои данные</div>
-              <Link to='/myPhoto4ki'>
+              <Link to='/my-photos'>
                 <img className={css.photo} src={image} alt='userPhoto' />
               </Link>
             </div>
@@ -159,7 +303,12 @@ const Profile = () => {
             <div className={css.options}>
               <div>
                 <button
-                  onClick={() => seteditMode((prev) => !prev, setSave(false))}
+                  onClick={() => {
+                    seteditMode((prev) => !prev, setSave(false));
+                    isEditing === true
+                      ? setIsEditing(false)
+                      : setIsEditing(false);
+                  }}
                   className={css.update}
                 >
                   Редактировать данные
@@ -180,11 +329,7 @@ const Profile = () => {
                       setLastName(v.charAt(0).toUpperCase() + v.slice(1));
                     }
                   }}
-                  valid={
-                    lastName !== '' &&
-                    lastName.length <= 20 &&
-                    validateName(lastName)
-                  }
+                  valid={lastName !== '' && validateName(lastName)}
                 />
               </div>
               <div className={css.formInput}>
@@ -198,40 +343,57 @@ const Profile = () => {
                   }}
                   disabled={!editMode}
                   type='text'
-                  valid={
-                    firstName !== '' &&
-                    firstName.length <= 20 &&
-                    validateName(firstName)
-                  }
+                  valid={firstName !== '' && validateName(firstName)}
                 />
               </div>
               <div className={css.formInput}>
-                <Input
-                  label='Отчество*'
-                  value={patronymic}
-                  setValue={(v) => {
-                    if (!/[a-z0-9]/gi.test(v)) {
-                      setPatronymic(v.charAt(0).toUpperCase() + v.slice(1));
-                    }
-                  }}
-                  disabled={!editMode}
-                  type='text'
-                  valid={
-                    patronymic !== '' &&
-                    patronymic.length <= 20 &&
-                    validateName(patronymic)
-                  }
-                />
+                {isSName && (
+                  <Input
+                    label='Отчество'
+                    value={patronymic}
+                    setValue={(v) => {
+                      if (!/[a-z0-9]/gi.test(v)) {
+                        setPatronymic(v.charAt(0).toUpperCase() + v.slice(1));
+                        setLastSName(v.charAt(0).toUpperCase() + v.slice(1));
+                      }
+                    }}
+                    disabled={!editMode}
+                    type='text'
+                    valid={patronymic && patronymic.length > 0}
+                  />
+                )}
+
+                {editMode && lastSName.length < 1 && (
+                  <div className={css.snameLabel}>
+                    <input
+                      type='checkbox'
+                      checked={!isSName}
+                      disabled={!editMode}
+                      style={{ paddingRight: '15px', paddingBottom: '20px' }}
+                      onChange={() => {
+                        setIsSName(!isSName);
+                        if (isSName) {
+                          setPatronymic('');
+                        } else {
+                          setPatronymic(lastSName);
+                        }
+                      }}
+                    />
+                    Нет отчества?
+                  </div>
+                )}
               </div>
               <div className={css.formInput}>
                 <Input
                   valid={
+                    dateborn &&
                     dateborn.toString().indexOf('_') === -1 &&
                     dateborn.length > 0
                   }
                   disabled={!editMode}
                   value={dateborn}
-                  type='date'
+                  dateType
+                  type='text'
                   setValue={(e) => {
                     setDateborn(e);
                   }}
@@ -240,7 +402,10 @@ const Profile = () => {
               </div>
               <div className={css.formInput}>
                 <Input
-                  valid={validateEmail(email)}
+                  valid={
+                    email !== undefined &&
+                    Isemail.validate(email, { minDomainAtoms: 2 })
+                  }
                   value={email}
                   setValue={(v) => {
                     if (!/[а-я]/gi.test(v)) {
@@ -251,11 +416,10 @@ const Profile = () => {
                   disabled={!editMode}
                   type='email'
                   name='email'
-                  maxLength='30'
                 />
               </div>
               <div className={css.formInput}>
-                <PhoneInput
+                <NewPhoneInput
                   value={phone}
                   label='Номер сотового телефона*'
                   setValue={setPhone}
@@ -264,91 +428,10 @@ const Profile = () => {
                 />
               </div>
 
-              {okNumber ? (
-                <div></div>
-              ) : !sentCode ? (
-                <div className={css.buttons}>
-                  <button
-                    // disabled={changePwd || editMode}
-                    className={css.update_pass}
-                    onClick={async () => {
-                      try {
-                        const data = await request.getAuth(
-                          'persident/phoneapprove?sendkod=true'
-                        );
-                        if (data.status !== 'error') {
-                          console.log(data);
-                          setsentCode(true);
-                        } else {
-                          setTitle('Ошибка');
-                          setOpenModal(true);
-                          setTextError(data.errordesc);
-                        }
-                      } catch (error) {
-                        console.error('error: ', error);
-                        setOpenModal(true);
-                        setTextError(error);
-                      }
-                    }}
-                    // {() => setsentCode(true)}
-                  >
-                    Подтвердить номер
-                  </button>
-                </div>
-              ) : (
-                <div className={css.formInput}>
-                  <div className={css.formInput}>
-                    <span className={css.code_span}>
-                      На номер телефона был отправлен код. Введите его в поле:
-                    </span>
-                  </div>
-                  <Input
-                    value={code}
-                    setValue={(value) => {
-                      if (value.length <= 4) {
-                        setCode(value);
-                      }
-                    }}
-                    label='Введите код подтверждения'
-                    type='number'
-                    name='code'
-                    valid={code.length === 4}
-                    max='4'
-                  />
-
-                  <div className={css.buttons}>
-                    <button
-                      // disabled={code == "" && code.length !== 4}
-                      className={css.update_pass}
-                      onClick={async () => {
-                        try {
-                          const data = await request.postAuth(
-                            'persident/phoneapprove',
-                            [['kod', code]]
-                          );
-                          if (data.status !== 'error') {
-                            setOpenModal(true);
-                            setTitle('Успешно');
-                            setTextError(data.desc);
-                            setsentCode(false);
-                            setOkNumber(true);
-                          } else {
-                            setOpenModal(true);
-                            setTitle('Ошибка');
-                            setTextError(data.errordesc);
-                            setsentCode(false);
-                          }
-                        } catch (error) {
-                          console.error('error: ', error);
-                          setOpenModal(true);
-                          setTextError(error);
-                        }
-                      }}
-                    >
-                      Отправить
-                    </button>
-                  </div>
-                </div>
+              {!okNumber && (
+                <Link className={css.PhoneConfirm} to='/phone-confirm'>
+                  Подтвердить номер
+                </Link>
               )}
             </div>
             <div className={css.selects}>
@@ -361,6 +444,7 @@ const Profile = () => {
                   options={folkroles}
                   name='role'
                 />
+                {/* {console.log({ folkroles })} */}
               </div>
               <div className={css.formSelect}>
                 <Select
@@ -374,63 +458,45 @@ const Profile = () => {
               </div>
               {editMode && (
                 <div>
-                  <button
-                    className={css.update_pass}
-                    onClick={async () => {
-                      try {
-                        const data = await request.postAuth(
-                          'persident/folkdata',
-                          [
-                            [
-                              'fio',
-                              lastName + ' ' + firstName + ' ' + patronymic,
-                            ],
-                            ['phone', phone],
-                            ['email', email],
-                            ['dateborn', dateborn],
-                            ['folkrole', role],
-                            ['institute', institute],
-                          ]
-                        );
-                        if (data.status !== 'error') {
-                          console.log(data);
-                          setOpenModal(true);
-                          setTextError(data.desc);
-                          setTitle('Успешно');
-                          seteditMode(false);
-                          if (phone !== phoneTmp) {
-                            setOkNumber(false);
-                          }
-                        } else {
-                          setTitle('Ошибка');
-                          setOpenModal(true);
-                          setTextError(data.errordesc);
-                          console.log(data);
-                        }
-                      } catch (error) {
-                        console.error('error: ', error);
-                        setOpenModal(true);
-                        setTextError(error);
-                      }
-                    }}
-                    disabled={
-                      !(
+                  {!isEditing ? (
+                    <button
+                      className={
                         lastName !== '' &&
-                        lastName.length <= 20 &&
+                        lastName.length >= 1 &&
                         validateName(lastName) &&
                         firstName !== '' &&
-                        firstName.length <= 20 &&
+                        firstName.length >= 1 &&
                         validateName(firstName) &&
-                        patronymic !== '' &&
-                        patronymic.length <= 20 &&
-                        validateName(patronymic) &&
-                        validateEmail(email) &&
+                        Isemail.validate(email, { minDomainAtoms: 2 }) &&
                         dateborn.indexOf('_') === -1
-                      )
-                    }
-                  >
-                    Сохранить
-                  </button>
+                          ? css.update_pass
+                          : css.disabled_pass
+                      }
+                      onClick={ConfirmChangeData}
+                      disabled={
+                        !(
+                          lastName !== '' &&
+                          lastName.length >= 1 &&
+                          validateName(lastName) &&
+                          firstName !== '' &&
+                          firstName.length >= 1 &&
+                          validateName(firstName) &&
+                          Isemail.validate(email, { minDomainAtoms: 2 }) &&
+                          dateborn.indexOf('_') === -1 &&
+                          !isEditing
+                        )
+                      }
+                    >
+                      Сохранить
+                    </button>
+                  ) : (
+                    <Loader
+                      type='Bars'
+                      color='#247ABF'
+                      height={30}
+                      width={30}
+                    />
+                  )}
                 </div>
               )}
               <div>
@@ -449,12 +515,13 @@ const Profile = () => {
                       EyeOpen
                       valid={
                         password !== '' &&
-                        password.length >= 6 &&
-                        password.length <= 20
+                        password.match(
+                          /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{6,}$/
+                        )
                       }
                       value={password}
                       setValue={(value) => {
-                        if (value.length <= 20) {
+                        if (value.length <= 28) {
                           setPassword(value);
                         }
                       }}
@@ -470,11 +537,13 @@ const Profile = () => {
                       valid={
                         newPassword !== '' &&
                         newPassword.length >= 6 &&
-                        newPassword.length <= 20
+                        newPassword.match(
+                          /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{6,}$/
+                        )
                       }
                       value={newPassword}
                       setValue={(value) => {
-                        if (value.length <= 20) {
+                        if (value.length <= 200) {
                           setNewPassword(value);
                         }
                       }}
@@ -489,13 +558,15 @@ const Profile = () => {
                       EyeOpen
                       valid={
                         newPasswordR !== '' &&
+                        newPasswordR === newPassword &&
                         newPasswordR.length >= 6 &&
-                        newPasswordR.length <= 20 &&
-                        newPassword === newPasswordR
+                        newPasswordR.match(
+                          /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{6,}$/
+                        )
                       }
                       value={newPasswordR}
                       setValue={(value) => {
-                        if (value.length <= 20) {
+                        if (value.length <= 200) {
                           setNewPasswordR(value);
                         }
                       }}
@@ -505,55 +576,48 @@ const Profile = () => {
                       name='password'
                     />
                   </div>
+                  {newPassword.length > 0 &&
+                    !newPassword.match(
+                      /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{6,}$/
+                    ) && (
+                      <ul className={css.passwordRequirements}>
+                        <li>Пароль должен быть 6 символов или более.</li>
+                        <li>
+                          Только латиница, тире, точки. Пробелы не допустимы.
+                        </li>
+                        <li>Также 1 заглавную и 1 прописную</li>
+                      </ul>
+                    )}
                   <div>
-                    <button
-                      className={css.update_pass}
-                      disabled={
-                        !(
-                          password !== '' &&
-                          password.length >= 6 &&
-                          password.length <= 20 &&
-                          newPassword !== '' &&
-                          newPassword.length >= 6 &&
-                          newPassword.length <= 20 &&
-                          newPasswordR !== '' &&
-                          newPasswordR.length >= 6 &&
-                          newPasswordR.length <= 20 &&
-                          newPassword === newPasswordR
-                        )
-                      }
-                      onClick={async () => {
-                        try {
-                          const data = await request.postAuth(
-                            'persident/pwdchange',
-                            [
-                              ['oldpwd', password],
-                              ['newpwd', newPassword],
-                              ['confirmpwd', newPasswordR],
-                            ]
-                          );
-                          if (data.status !== 'error') {
-                            setOpenModal(true);
-                            setTitle('Успешно');
-                            setTextError(data.desc);
-                            console.log(data);
-                            setChangePwd(false);
-                            seteditMode(false);
-                          } else {
-                            setOpenModal(true);
-                            setTextError(data.desc);
-                            setChangePwd(false);
-                            console.log(data);
-                          }
-                        } catch (error) {
-                          console.error('error: ', error);
-                          setOpenModal(true);
-                          setTextError(error);
+                    {!isChangingPassword ? (
+                      <button
+                        className={css.update_pass}
+                        disabled={
+                          !(
+                            password !== '' &&
+                            password.length >= 6 &&
+                            password.length <= 28 &&
+                            newPassword !== '' &&
+                            newPassword.length >= 6 &&
+                            newPassword.length <= 28 &&
+                            newPasswordR !== '' &&
+                            newPasswordR.length >= 6 &&
+                            newPasswordR.length <= 28 &&
+                            newPassword === newPasswordR
+                          )
                         }
-                      }}
-                    >
-                      Сохранить
-                    </button>
+                        onClick={ChangePasswordHandler}
+                      >
+                        Сохранить
+                      </button>
+                    ) : (
+                      <Loader
+                        type='Bars'
+                        color='#247ABF'
+                        height={30}
+                        width={30}
+                      />
+                    )}
                   </div>
                 </div>
               )}
@@ -566,25 +630,18 @@ const Profile = () => {
               BtnClick={() => setOpenModal(false)}
               buttonTitle='Ок'
             />
-          </div>
+          </>
         ) : (
           <Spinner show={loadingData} />
         )}
       </div>
-    );
-  }
+    )
+  );
 };
 
 function validateName(value) {
-  const reg = /^[А-Яа-я]+$/;
+  const reg = /^[А-ЯЁа-яё -]+$/;
   return reg.test(value);
-}
-
-function validateEmail(email) {
-  const re =
-    // eslint-disable-next-line
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
 }
 
 export default Profile;

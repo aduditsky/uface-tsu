@@ -10,3 +10,115 @@
   left: 0;
   font-size: 20px;
 }
+
+.RefreshPhoneContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.ResendContainer {
+  display: flex;
+  font-size: 12px;
+  margin: auto;
+  margin-top: 19px !important;
+  margin-bottom: 38px;
+  justify-content: center;
+  align-items: center;
+}
+
+.Header {
+  margin-top: 48px;
+}
+
+.ResendText {
+  margin-right: 20px;
+}
+
+.ResendEmptyP {
+  margin: 0;
+  padding: 0;
+  color: rgb(238, 170, 170);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+.ResendButton {
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  color: rgb(236, 99, 100);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+.ResendButton:hover {
+  text-decoration: underline;
+}
+
+.RefreshLabel {
+  padding: 0;
+  margin: 0;
+  margin-right: 10px;
+  color: #828088;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.Phone {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 25px;
+}
+
+.refreshButton {
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 12px;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 5px 30px 30px 30px;
+  background-color: #2c2c2c;
+  border: none;
+  padding: 8px 24px;
+  cursor: pointer;
+  font-family: 'Montserrat';
+}
+
+.disabledButton {
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 12px;
+  font-weight: 600;
+  padding: 8px 24px;
+  border-radius: 5px 30px 30px 30px;
+  font-family: 'Montserrat';
+  border: none;
+  color: #fff;
+  box-shadow: 0px 2px 4px rgba(138, 149, 158, 0.2);
+  background-color: grey;
+  pointer-events: none;
+}
+
+.ChangePhone {
+  padding: 0;
+  margin: 0;
+  color: rgb(236, 99, 100);
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 400;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+
+.ChangePhone:hover {
+  text-decoration: underline;
+}

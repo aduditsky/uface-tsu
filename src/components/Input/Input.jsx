@@ -18,26 +18,38 @@ const Input = (props) => {
     label,
     value,
     EyeOpen,
+    dateType,
+    eMail,
+    nonvalidicon = true,
     // enter,
-    type = 'text',
     disabled,
   } = props;
 
+  let type = 'text';
+
+  if (password || enterPassword) {
+    eyeOpen ? (type = 'text') : (type = 'password');
+  }
+
+  // let Today = Date()
+
   return (
     <div className={css.input}>
-      {type === 'date' ? (
+      {dateType && (
         <IMaskInput
           className={css.input_native}
           disabled={disabled}
           mask={Date}
-          min={new Date(1950, 0, 1)}
+          min={new Date(1910, 0, 1)}
           max={new Date(2008, 0, 1)}
           lazy={false}
+          type='text'
           placeholder={'2281337'}
           onAccept={(value) => setValue(value)}
           value={value}
         />
-      ) : enterInput ? (
+      )}
+      {enterInput && (
         <input
           maxLength={maxLength}
           onChange={(event) => setValue(event.target.value)}
@@ -47,7 +59,8 @@ const Input = (props) => {
           placeholder={placeholder}
           {...props}
         />
-      ) : password ? (
+      )}
+      {password && EyeOpen ? (
         <input
           maxLength={maxLength}
           onChange={(event) => setValue(event.target.value)}
@@ -57,7 +70,21 @@ const Input = (props) => {
           placeholder={placeholder}
           {...props}
         />
-      ) : enterPassword ? (
+      ) : (
+        password &&
+        !EyeOpen && (
+          <input
+            maxLength={maxLength}
+            onChange={(event) => setValue(event.target.value)}
+            value={value}
+            className={eyeOpen ? css.inputPasswordOpen : css.inputPasswordClose}
+            type={type}
+            placeholder={placeholder}
+            {...props}
+          />
+        )
+      )}
+      {enterPassword && EyeOpen ? (
         <input
           maxLength={maxLength}
           onChange={(event) => setValue(event.target.value)}
@@ -68,6 +95,31 @@ const Input = (props) => {
           {...props}
         />
       ) : (
+        enterPassword &&
+        !EyeOpen && (
+          <input
+            maxLength={maxLength}
+            onChange={(event) => setValue(event.target.value)}
+            value={value}
+            className={eyeOpen ? css.enterPasswordOpen : css.enterPasswordClose}
+            type={type}
+            placeholder={placeholder}
+            {...props}
+          />
+        )
+      )}
+      {eMail && (
+        <input
+          maxLength={maxLength}
+          onChange={(event) => setValue(event.target.value)}
+          value={value}
+          className={css.input_native}
+          type='email'
+          placeholder={placeholder}
+          {...props}
+        />
+      )}
+      {!enterPassword && !password && !enterInput && !dateType && !eMail && (
         <input
           maxLength={maxLength}
           onChange={(event) => setValue(event.target.value)}
@@ -78,11 +130,17 @@ const Input = (props) => {
           {...props}
         />
       )}
-      {valid && (
+      {valid && nonvalidicon && (
         <img className={css.valid_icon} src={valid_icon} alt='ok_icon' />
       )}
       {EyeOpen && (
-        <button className={css.eyeButton} onClick={() => setEyeOpen(!eyeOpen)}>
+        <button
+          type='button'
+          className={css.eyeButton}
+          onClick={(e) => {
+            setEyeOpen(!eyeOpen);
+          }}
+        >
           <img
             src={eyeOpen ? eyeOpenImg : eyeCloseImg}
             alt='visiblePassword'

@@ -19,14 +19,14 @@ const ConfirmAccountFromMail = () => {
         ['key', `${window.location.href.split('key=')[1]}`],
       ]);
       if (data.status !== 'error') {
-        console.log(data);
+        // console.log(data);
       } else {
         setOpenModal(true);
         setTextError(data.errordesc);
         console.log(data);
       }
     } catch (error) {
-      console.log('error: ', error);
+      // console.log('error: ', error);
       setOpenModal(true);
       setTextError(error);
     }
@@ -34,7 +34,7 @@ const ConfirmAccountFromMail = () => {
 
   return (
     <div className={css.base_container}>
-      <div className={css.header}>Ваша учетная запись успешно подтвреждена</div>
+      <div className={css.header}>Ваша учетная запись успешно подтверждена</div>
       <div className={css.content}>
         <center>
           <div

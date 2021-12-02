@@ -13,6 +13,7 @@
   object-fit: cover;
   border-radius: 200px;
   margin-bottom: 23px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
 .buttons {
@@ -20,11 +21,35 @@
   font-weight: 700;
   font-style: normal;
   font-size: 20px;
+  border: none;
   line-height: 24px;
   color: #2c2c2c;
   text-decoration: none;
 }
 
+.photoInstruction {
+  color: #2c2c2c;
+  text-decoration: underline;
+  margin-top: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.disabledButtons {
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 12px;
+  font-weight: 600;
+  padding: 8px 24px;
+  border-radius: 5px 30px 30px 30px;
+  font-family: 'Montserrat';
+  border: none;
+  color: #fff;
+  box-shadow: 0px 2px 4px rgba(138, 149, 158, 0.2);
+  background-color: grey;
+  pointer-events: none;
+}
 .buttons:visited {
   text-decoration: none;
   color: #2c2c2c;
@@ -62,11 +87,79 @@
   text-align: center;
 }
 
+.RingCount {
+  height: 49px;
+  width: 49px;
+  background-color: #247abf;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.UploadPhoto {
+  border: none;
+  background: none;
+  font-size: 17px;
+  line-height: 24px;
+  color: #000;
+  font-family: 'Montserrat';
+  font-weight: 400;
+  cursor: pointer;
+  margin: auto;
+  padding: 0;
+}
+
+.UploadPhoto:hover {
+  text-decoration: underline;
+}
+
+.lines {
+  height: 50%;
+  width: auto;
+  left: 0%;
+  top: -30%;
+  transform: scale(1, -1) rotate(0deg);
+  border-radius: 0px;
+  position: fixed;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+.secondLines {
+  height: 80%;
+  width: auto;
+  right: -15%;
+  transform: scale(-1, 1) rotate(0deg);
+  bottom: -10%;
+  border-radius: 0px;
+  position: fixed;
+  z-index: -1;
+  opacity: 0.3;
+}
+
 .smile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border: none;
   background: none;
   width: fit-content;
   margin: 0 auto;
+  cursor: pointer;
+}
+
+.smileSpan {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-top: 12px;
+  font-family: 'Montserrat';
 }
 
 .startPhoto {
@@ -96,6 +189,45 @@
   flex-direction: column;
 }
 
+.button {
+  display: inline-flex;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  width: 306px;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  line-height: 24px;
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Montserrat';
+  background-color: #2c2c2c;
+  color: #fff;
+  box-shadow: 0px 2px 4px rgba(138, 149, 158, 0.2);
+  border-radius: 5px 30px 30px 30px;
+}
+.disabled {
+  display: inline-flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  width: 306px;
+  border: none;
+  height: 56px;
+  line-height: 56px;
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Montserrat';
+  color: #fff;
+  box-shadow: 0px 2px 4px rgba(138, 149, 158, 0.2);
+  border-radius: 5px 30px 30px 30px;
+  letter-spacing: 0.38px;
+  background-color: grey;
+  pointer-events: none;
+  cursor: pointer;
+}
+
 @media (max-width: 400px) {
   .header {
     margin-bottom: 15px;
@@ -106,5 +238,65 @@
     width: 200px;
     height: 200px;
     border-radius: 180px;
+  }
+}
+
+/* Спинер лоадер */
+
+.loader,
+.loader:before,
+.loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1.8s infinite ease-in-out;
+  animation: load7 1.8s infinite ease-in-out;
+}
+.loader {
+  color: #ffffff;
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+.loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 3.5em;
+}
+@-webkit-keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+@keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
   }
 }

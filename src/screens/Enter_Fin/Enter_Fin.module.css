@@ -16,6 +16,10 @@
   height: auto;
 }
 
+.faceelook {
+  width: 51%;
+}
+
 .log_in {
   display: grid;
   margin-top: 69px;
@@ -83,7 +87,7 @@
 }
 
 .enterBtn {
-  padding: 0 36px 53px 36px;
+  padding: 0 36px 33px 36px;
 }
 
 .sber_icon {
