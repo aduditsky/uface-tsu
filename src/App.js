@@ -11,6 +11,7 @@ import RecoverPWD from './screens/Enter/RecoverPWD';
 import MyPhoto4ki from './screens/MyPhoto4ki/MyPhotos';
 import ConfirmAccountFromMail from './screens/ConfirmAccountFromMail/ConfirmAccountFromMail';
 import ConfirmPhoneNumberScreen from './screens/ConfirmPhone/ConfirmPhone';
+import CovidCertPage from './screens/CovidCert/CovidCertPage';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path='/recover-password' component={RecoverPWD} />
           <Route path='/phone-confirm' component={ConfirmPhoneNumberScreen} />
           <Route path='/login' component={Enter} />
+          <Route path='/covid' component={CovidCertPage} />
           <Route path='/' exact component={EnterFin} />
         </Router>
       </div>

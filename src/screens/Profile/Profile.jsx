@@ -6,6 +6,7 @@ import { Link, Redirect } from 'react-router-dom';
 import photo from '../../images/no_photo.jpg';
 import closeBtn from '../../images/close.svg';
 import Lines from '../../images/lines/profile.svg';
+import CovidLogo from '../../images/covid-logo.png';
 
 import request from '../../request';
 import NewPhoneInput from '../../components/PhoneInput/PhoneInput';
@@ -67,6 +68,7 @@ const Profile = () => {
     const req = await request.getAuth('persident/folkdata');
     // console.log({ req });
     if (req.status === 'success') {
+      console.log({ req });
       setLastName(req.lname);
       setFirstName(req.fname);
       setPatronymic(req.sname);
@@ -298,6 +300,59 @@ const Profile = () => {
               <Link to='/my-photos'>
                 <img className={css.photo} src={image} alt='userPhoto' />
               </Link>
+            </div>
+
+            {/* Covid-19 блок */}
+            <div style={{ display: 'flex', width: '100%', gap: 4 }}>
+              <div style={{ display: 'flex', minWidth: 50 }}>
+                <img
+                  src={CovidLogo}
+                  alt={`Изображение Covid-19`}
+                  width={50}
+                  height={50}
+                />
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  textAlign: 'left',
+                  alignItems: 'left',
+                  alignContent: 'left',
+                  flexDirection: 'column',
+                  width: '100%',
+                  paddingTop: 5,
+                  marginBottom: 4,
+                }}
+              >
+                <Link to='/covid'>
+                  <span
+                    style={{
+                      fontFamily: 'Montserrat',
+                      fontStyle: 'normal',
+                      fontWeight: 'normal',
+                      fontSize: '14px',
+                      lineHeight: '17px',
+                      color: '#247ABF',
+                    }}
+                  >
+                    COVID-19 <br /> Сведения о вакцинации (QR-код)
+                  </span>
+                </Link>
+                {/*  */}
+                <div
+                  style={{
+                    fontFamily: 'Montserrat',
+                    fontStyle: 'normal',
+                    fontWeight: 'normal',
+                    fontSize: '14px',
+                    lineHeight: '17px',
+                    color: '#2C2C2C',
+                  }}
+                >
+                  Сертификат подтвержден <br />
+                  Действует до {`01.10.2022`}
+                </div>
+              </div>
             </div>
 
             <div className={css.options}>
