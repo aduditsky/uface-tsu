@@ -179,6 +179,39 @@ const refreshToken = async (api) => {
   return json;
 };
 
+const getQrCode = async () => {
+  var urlencoded = new URLSearchParams();
+  urlencoded.append('Authorization', 'Bearer ' + localStorage.getItem('token'));
+
+  var requestOptions = {
+    method: 'GET',
+    headers: urlencoded,
+    redirect: 'follow',
+  };
+
+  const f = await fetch(baseUrl + '/persident/folkc19', requestOptions);
+  const json = await f.json();
+  return json;
+};
+
+const updateQrCode = async (qr) => {
+  var myHeaders = new Headers();
+  myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'));
+  var urlencoded = new URLSearchParams();
+  urlencoded.append('url', qr);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: 'follow',
+  };
+
+  const f = await fetch(baseUrl + '/persident/folkc19', requestOptions);
+  const json = await f.json();
+  return json;
+};
+
 const request = {
   get,
   post,
@@ -189,6 +222,8 @@ const request = {
   refreshToken,
   MakeExtImgAsMain,
   getInst,
+  getQrCode,
+  updateQrCode,
 };
 
 export default request;
