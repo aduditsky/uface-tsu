@@ -83,6 +83,7 @@
   border-radius: 5px 30px 30px 30px;
   letter-spacing: 0.38px;
 }
+
 .disabled {
   display: inline-block;
   text-decoration: none;
@@ -101,6 +102,26 @@
 .buttonBig:visited {
   text-decoration: none;
   color: #fff;
+}
+
+.buttonStop {
+  display: inline-flex;
+  text-decoration: none;
+  padding: 15px;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  line-height: 17px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Montserrat';
+  background-color: #2c2c2c;
+  border: none;
+  color: #fff;
+  box-shadow: 0px 2px 4px rgba(138, 149, 158, 0.2);
+  border-radius: 5px 30px 30px 30px;
+  letter-spacing: 0.38px;
 }
 
 .Btn_native:hover,

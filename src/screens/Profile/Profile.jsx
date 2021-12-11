@@ -67,7 +67,13 @@ const Profile = () => {
   }, []);
 
   async function fetchData(url) {
-    const linkBase = 'https://www.gosuslugi.ru/api/covid-cert/v2/cert/status/';
+    let linkBase;
+    if (url.includes('status')) {
+      linkBase = 'https://www.gosuslugi.ru/api/covid-cert/v2/cert/status/';
+    } else if (url.includes('verify')) {
+      linkBase = 'https://www.gosuslugi.ru/api/covid-cert/v3/cert/check/';
+    }
+
     let qrCodeId = url.split('/').pop();
 
     let res = await fetch(linkBase + qrCodeId);
@@ -84,7 +90,7 @@ const Profile = () => {
       fetchData(res.url);
     }
     if (req.status === 'success') {
-      console.log({ req });
+      // console.log({ req });
       setLastName(req.lname);
       setFirstName(req.fname);
       setPatronymic(req.sname);
@@ -287,11 +293,6 @@ const Profile = () => {
         {!loadingData ? (
           <>
             <div className={css.links}>
-              {/* <div className={css.uface}>
-                <Link className={css.uface} to='/profile'>
-                  Кабинет Uface
-                </Link>
-              </div> */}
               <div className={css.cabinetText}>Кабинет Uface</div>
               <div className={css.closeBtn}>
                 <button
@@ -327,7 +328,6 @@ const Profile = () => {
                   height={50}
                 />
               </div>
-              {console.log({ dataQr })}
               <div className={css.covidInfoContainer}>
                 <Link to='/covid'>
                   <span className={css.covidInfoHeader}>

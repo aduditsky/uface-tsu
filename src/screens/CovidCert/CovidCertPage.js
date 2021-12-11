@@ -19,6 +19,7 @@ const CovidCertPage = () => {
   const [url, setUrl] = useState(null);
   const [isSaving, setSave] = useState(false);
   const [isSuccessful, setSuccess] = useState(null);
+  const [errSaveMsg, setMsg] = useState(null);
   let inputFile = null;
   let histrory = useHistory();
 
@@ -32,15 +33,18 @@ const CovidCertPage = () => {
   });
 
   useEffect(() => {
+    if (decodedQRData.data?.includes('https://www.gosuslugi.ru/covid-cert/')) {
+      setUrl(decodedQRData.data);
+    }
     getQrCode().then((result) => {
-      // console.log({ result });
-      setUrl(result.url);
+      if (result.status === 'success') {
+        setUrl(result.url);
+      }
     });
+
     // Add logic to add the camera and scan it
     // startQrCode();
-  }, [getQrCode]);
-
-  // console.log({ decodedQRData });
+  }, [getQrCode, decodedQRData]);
 
   if (loading) {
     return <Spinner show={loading} />;
@@ -85,7 +89,7 @@ const CovidCertPage = () => {
       <div id='qrcodemountnode'></div>
       {decodedQRData.isScanning && (
         <button
-          className={css.buttonBig}
+          className={css.buttonStop}
           onClick={() => {
             stopQrCode();
           }}
@@ -108,6 +112,10 @@ const CovidCertPage = () => {
                   setSuccess(true);
                   histrory.push('/profile');
                 }
+                if (result.status === 'error') {
+                  setSuccess(false);
+                  setMsg(result.errordesc);
+                }
               })
               .catch((err) => {
                 // failure, handle it.
@@ -123,6 +131,7 @@ const CovidCertPage = () => {
             ? 'Сохраняем...'
             : 'Попробуйте еще раз'}
         </button>
+        {errSaveMsg && url && <p>{errSaveMsg}</p>}
       </div>
       <input
         type='file'

@@ -13,3 +13,12 @@
 #qr-scanned {
   display: none !important;
 }
+
+#qrcodemountnode video {
+  border-radius: 47px;
+}
+
+#qr-shaded-region {
+  border-radius: 47px;
+  display: none;
+}
