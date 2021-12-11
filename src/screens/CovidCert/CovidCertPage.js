@@ -107,7 +107,7 @@ const CovidCertPage = () => {
             setSave(true);
             updateQrCode(url)
               .then((result) => {
-                console.log({ result });
+                // console.log({ result });
                 if (result.status === 'success') {
                   setSuccess(true);
                   histrory.push('/profile');
