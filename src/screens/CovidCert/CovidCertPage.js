@@ -17,14 +17,10 @@ const CovidCertPage = () => {
   const { getQrCode, updateQrCode } = request;
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState(null);
-<<<<<<< HEAD
-  let inpFile = null;
-=======
   const [isSaving, setSave] = useState(false);
   const [isSuccessful, setSuccess] = useState(false);
   let inputFile = null;
   let histrory = useHistory();
->>>>>>> ff5a08b0a73b2e46be3a55791a21c0df6ca94b1f
 
   if (loading) {
     setLoading(false);
@@ -41,15 +37,9 @@ const CovidCertPage = () => {
     });
     // Add logic to add the camera and scan it
     // startQrCode();
-<<<<<<< HEAD
-  }, [url, getQrCode]);
-=======
   }, [getQrCode]);
->>>>>>> ff5a08b0a73b2e46be3a55791a21c0df6ca94b1f
 
-  const saveHandler = () => {
-    console.log(`Fire some Action`);
-  };
+  // console.log({ decodedQRData });
 
   if (loading) {
     return <Spinner show={loading} />;
@@ -76,11 +66,7 @@ const CovidCertPage = () => {
         <span
           className={css.button}
           onClick={() => {
-<<<<<<< HEAD
-            inpFile.click();
-=======
             inputFile.click();
->>>>>>> ff5a08b0a73b2e46be3a55791a21c0df6ca94b1f
           }}
         >
           Загрузить файл
@@ -95,10 +81,9 @@ const CovidCertPage = () => {
         </span>
       </div>
 
-      <div className={css.imageBlock} id='qrcodemountnode'></div>
+      <div id='qrcodemountnode'></div>
       {decodedQRData.isScanning && (
         <button
-          className={css.button}
           onClick={() => {
             stopQrCode();
           }}
@@ -106,17 +91,6 @@ const CovidCertPage = () => {
           Остановить
         </button>
       )}
-<<<<<<< HEAD
-      {!!reqErr && <p>{reqErr}</p>}
-
-      <div id='qr-scanned'></div>
-      <Iframe source={!!url && url} />
-      <div className={css.enterBtn}>
-        <Button onclick={() => saveHandler()} to='/profile'>
-          Сохранить
-        </Button>
-      </div>
-=======
       <div id='qr-scanned'></div>
       <Iframe source={!!url && url} />
       <div className={css.enterBtn}>
@@ -171,7 +145,6 @@ const CovidCertPage = () => {
           e.target.value = '';
         }}
       />
->>>>>>> ff5a08b0a73b2e46be3a55791a21c0df6ca94b1f
       {/* <Modal
         open={openModal}
         close={() => setOpenModal(false)}
@@ -180,39 +153,6 @@ const CovidCertPage = () => {
         BtnClick={() => setOpenModal(false)}
         buttonTitle='Ок'
       /> */}
-      <input
-        type='file'
-        id='qr-input-file'
-        accept='image/*'
-        style={{ display: 'none' }}
-        ref={(inp) => (inpFile = inp)}
-        onChange={(e) => {
-          if (e.target.files.length === 0) {
-            return;
-          }
-          const imageFile = e.target.files[0];
-          const html5QrCode = new Html5Qrcode('qr-scanned');
-
-          // Scan QR Code
-          html5QrCode
-            .scanFile(imageFile, true)
-            .then((decodedText) => {
-              if (
-                decodedText.includes('https://www.gosuslugi.ru/covid-cert/')
-              ) {
-                // console.log({ decodedText });
-                // setQRFile(decodedText);
-                updateQrCode(decodedText).then((result) => {
-                  console.log({ result });
-                  setRE(result.errordesc);
-                });
-              }
-            })
-            .catch((err) => {
-              console.log(`Error scanning file. Reason: ${err}`);
-            });
-        }}
-      />
     </div>
   );
 };
