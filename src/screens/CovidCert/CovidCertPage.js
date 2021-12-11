@@ -18,7 +18,7 @@ const CovidCertPage = () => {
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState(null);
   const [isSaving, setSave] = useState(false);
-  const [isSuccessful, setSuccess] = useState(false);
+  const [isSuccessful, setSuccess] = useState(null);
   let inputFile = null;
   let histrory = useHistory();
 
@@ -28,6 +28,7 @@ const CovidCertPage = () => {
 
   const { startQrCode, decodedQRData, stopQrCode } = useQRCodeScan({
     qrcodeMountNodeID: 'qrcodemountnode',
+    // closeAfterScan: false,
   });
 
   useEffect(() => {
@@ -84,6 +85,7 @@ const CovidCertPage = () => {
       <div id='qrcodemountnode'></div>
       {decodedQRData.isScanning && (
         <button
+          className={css.buttonBig}
           onClick={() => {
             stopQrCode();
           }}
@@ -97,18 +99,28 @@ const CovidCertPage = () => {
         <button
           className={css.buttonBig}
           type='button'
-          onclick={() => {
-            console.log(`Fire some Action`);
-            updateQrCode(url).then((result) => {
-              console.log({ result });
-            });
+          onClick={() => {
+            setSave(true);
+            updateQrCode(url)
+              .then((result) => {
+                console.log({ result });
+                if (result.status === 'success') {
+                  setSuccess(true);
+                  histrory.push('/profile');
+                }
+              })
+              .catch((err) => {
+                // failure, handle it.
+                setSuccess(false);
+                console.log(`Save is not successuf. Reason: ${err}`);
+              });
+            setSave(false);
           }}
-          to='/profile'
         >
           {!isSaving
             ? 'Сохранить'
             : isSuccessful && isSaving
-            ? 'Успешно'
+            ? 'Сохраняем...'
             : 'Попробуйте еще раз'}
         </button>
       </div>
