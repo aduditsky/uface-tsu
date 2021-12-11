@@ -156,6 +156,7 @@ const CovidCertPage = () => {
                 decodedText.includes('https://www.gosuslugi.ru/covid-cert/')
               ) {
                 setUrl(decodedText);
+                html5QrCode.clear();
               }
             })
             .catch((err) => {

@@ -11,7 +11,10 @@
 }
 
 #qr-scanned {
-  display: none !important;
+  position: fixed;
+  width: 1500px;
+  top: 0;
+  left: 0;
 }
 
 #qrcodemountnode video {
