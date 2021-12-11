@@ -18,6 +18,7 @@ const CovidCertPage = () => {
   const [loading, setLoading] = useState(false);
   const [reqErr, setRE] = useState(null);
   const [url, setUrl] = useState(null);
+  let inpFile = null;
 
   if (loading) {
     setLoading(false);
@@ -35,6 +36,10 @@ const CovidCertPage = () => {
     // Add logic to add the camera and scan it
     // startQrCode();
   }, [url, getQrCode]);
+
+  const saveHandler = () => {
+    console.log(`Fire some Action`);
+  };
 
   if (loading) {
     return <Spinner show={loading} />;
@@ -58,7 +63,14 @@ const CovidCertPage = () => {
         </div>
       </div>
       <div className={css.buttons}>
-        <span className={css.button}>Загрузить файл</span>
+        <span
+          className={css.button}
+          onClick={() => {
+            inpFile.click();
+          }}
+        >
+          Загрузить файл
+        </span>
         <span
           className={css.button}
           onClick={() => {
@@ -69,9 +81,10 @@ const CovidCertPage = () => {
         </span>
       </div>
 
-      <div id='qrcodemountnode'></div>
+      <div className={css.imageBlock} id='qrcodemountnode'></div>
       {decodedQRData.isScanning && (
         <button
+          className={css.button}
           onClick={() => {
             stopQrCode();
           }}
@@ -80,50 +93,11 @@ const CovidCertPage = () => {
         </button>
       )}
       {!!reqErr && <p>{reqErr}</p>}
-      <input
-        type='file'
-        id='qr-input-file'
-        accept='image/*'
-        onChange={(e) => {
-          if (e.target.files.length === 0) {
-            return;
-          }
 
-          const imageFile = e.target.files[0];
-
-          // console.log(imageFile);
-          const html5QrCode = new Html5Qrcode('qr-scanned');
-          // Scan QR Code
-          html5QrCode
-            .scanFile(imageFile, false)
-            .then((decodedText) => {
-              // success, use decodedText
-              if (
-                decodedText.includes('https://www.gosuslugi.ru/covid-cert/')
-              ) {
-                console.log({ decodedText });
-                // setQRFile(decodedText);
-                updateQrCode(decodedText).then((result) => {
-                  console.log({ result });
-                  setRE(result.errordesc);
-                });
-              }
-            })
-            .catch((err) => {
-              // failure, handle it.
-              console.log(`Error scanning file. Reason: ${err}`);
-            });
-        }}
-      />
       <div id='qr-scanned'></div>
       <Iframe source={!!url && url} />
       <div className={css.enterBtn}>
-        <Button
-          onclick={() => {
-            console.log(`Fire some Action`);
-          }}
-          to='/profile'
-        >
+        <Button onclick={() => saveHandler()} to='/profile'>
           Сохранить
         </Button>
       </div>
@@ -135,6 +109,39 @@ const CovidCertPage = () => {
         BtnClick={() => setOpenModal(false)}
         buttonTitle='Ок'
       /> */}
+      <input
+        type='file'
+        id='qr-input-file'
+        accept='image/*'
+        style={{ display: 'none' }}
+        ref={(inp) => (inpFile = inp)}
+        onChange={(e) => {
+          if (e.target.files.length === 0) {
+            return;
+          }
+          const imageFile = e.target.files[0];
+          const html5QrCode = new Html5Qrcode('qr-scanned');
+
+          // Scan QR Code
+          html5QrCode
+            .scanFile(imageFile, true)
+            .then((decodedText) => {
+              if (
+                decodedText.includes('https://www.gosuslugi.ru/covid-cert/')
+              ) {
+                // console.log({ decodedText });
+                // setQRFile(decodedText);
+                updateQrCode(decodedText).then((result) => {
+                  console.log({ result });
+                  setRE(result.errordesc);
+                });
+              }
+            })
+            .catch((err) => {
+              console.log(`Error scanning file. Reason: ${err}`);
+            });
+        }}
+      />
     </div>
   );
 };

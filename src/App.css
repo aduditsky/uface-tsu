@@ -9,3 +9,7 @@
 .app-wrapper-content {
   width: 100%;
 }
+
+#qr-scanned {
+  display: none !important;
+}

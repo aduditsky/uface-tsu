@@ -225,3 +225,45 @@
   font-size: 18px;
   color: #2c2c2c;
 }
+
+/* Covid Section */
+
+.covidContainer {
+  display: flex;
+  width: 100%;
+  gap: 4;
+}
+
+.covidLogoContainer {
+  display: flex;
+  min-width: 50px;
+}
+
+.covidInfoContainer {
+  display: flex;
+  text-align: left;
+  align-items: left;
+  justify-content: left;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 5px;
+  margin-bottom: 4px;
+}
+
+.covidInfoHeader {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  color: #246abf;
+}
+
+.covidData {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  color: #2c2c2c;
+}

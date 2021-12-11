@@ -318,8 +318,8 @@ const Profile = () => {
               </Link>
             </div>
             {/* Covid-19 блок */}
-            <div style={{ display: 'flex', width: '100%', gap: 4 }}>
-              <div style={{ display: 'flex', minWidth: 50 }}>
+            <div className={css.covidContainer}>
+              <div className={css.covidLogoContainer}>
                 <img
                   src={CovidLogo}
                   alt={`Изображение Covid-19`}
@@ -328,43 +328,14 @@ const Profile = () => {
                 />
               </div>
               {console.log({ dataQr })}
-              <div
-                style={{
-                  display: 'flex',
-                  textAlign: 'left',
-                  alignItems: 'left',
-                  alignContent: 'left',
-                  flexDirection: 'column',
-                  width: '100%',
-                  paddingTop: 5,
-                  marginBottom: 4,
-                }}
-              >
+              <div className={css.covidInfoContainer}>
                 <Link to='/covid'>
-                  <span
-                    style={{
-                      fontFamily: 'Montserrat',
-                      fontStyle: 'normal',
-                      fontWeight: 'normal',
-                      fontSize: '14px',
-                      lineHeight: '17px',
-                      color: '#247ABF',
-                    }}
-                  >
+                  <span className={css.covidInfoHeader}>
                     COVID-19 <br /> Сведения о вакцинации (QR-код)
                   </span>
                 </Link>
                 {dataQr ? (
-                  <div
-                    style={{
-                      fontFamily: 'Montserrat',
-                      fontStyle: 'normal',
-                      fontWeight: 'normal',
-                      fontSize: '14px',
-                      lineHeight: '17px',
-                      color: '#2C2C2C',
-                    }}
-                  >
+                  <div className={css.covidData}>
                     {dataQr.items[0].status === 'OK'
                       ? 'Сертификат подтвержден'
                       : 'Сертификат не подтвержден'}
@@ -372,7 +343,10 @@ const Profile = () => {
                     Действует до {dataQr.items[0].expiredAt}
                   </div>
                 ) : (
-                  <p>Нет данных о сертификате</p>
+                  <div className={css.covidData}>
+                    Нет данных о сертификате. <br />
+                    Добавьте или обновите его.
+                  </div>
                 )}
               </div>
             </div>
