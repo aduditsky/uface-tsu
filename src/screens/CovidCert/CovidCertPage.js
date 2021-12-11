@@ -151,7 +151,6 @@ const CovidCertPage = () => {
           html5QrCode
             .scanFile(imageFile, false)
             .then((decodedText) => {
-              // success, use decodedText
               if (
                 decodedText.includes('https://www.gosuslugi.ru/covid-cert/')
               ) {
