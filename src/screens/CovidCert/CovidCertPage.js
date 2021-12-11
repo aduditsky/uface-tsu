@@ -9,6 +9,8 @@ import CovidLogo from '../../images/covid-logo.png';
 import { useQRCodeScan } from '../../lib/useQRCodeScan';
 import { Html5Qrcode } from 'html5-qrcode';
 
+//asdasdsa
+
 // Импорты из конфига
 import Iframe from '../../components/Iframe/Iframe';
 
