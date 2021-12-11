@@ -64,10 +64,6 @@
   margin-bottom: 70px;
 }
 
-<<<<<<< HEAD
-.imageBlock {
-  display: none;
-=======
 .buttonBig {
   display: inline-flex;
   text-decoration: none;
@@ -111,5 +107,4 @@
 .Btn_native:visited:hover {
   opacity: 0.8;
   text-decoration: none;
->>>>>>> ff5a08b0a73b2e46be3a55791a21c0df6ca94b1f
 }

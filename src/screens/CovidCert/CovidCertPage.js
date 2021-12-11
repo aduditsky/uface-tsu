@@ -97,7 +97,7 @@ const CovidCertPage = () => {
         <button
           className={css.buttonBig}
           type='button'
-          onclick={() => {
+          onClick={() => {
             console.log(`Fire some Action`);
             updateQrCode(url).then((result) => {
               console.log({ result });
