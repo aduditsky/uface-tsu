@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import css from './covid-styles.module.css';
-// import { Link, Redirect } from 'react-router-dom';
 
 import { useHistory } from 'react-router-dom';
 import request from '../../request';
