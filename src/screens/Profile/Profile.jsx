@@ -57,16 +57,32 @@ const Profile = () => {
   const [preEditData, setPreEditData] = useState({});
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
+  //QR Code данные
+  const [dataQr, setDataQr] = useState(null);
+
   useEffect(() => {
     init();
     getSubData();
     // eslint-disable-next-line
   }, []);
 
+  async function fetchData(url) {
+    const linkBase = 'https://www.gosuslugi.ru/api/covid-cert/v2/cert/status/';
+    let qrCodeId = url.split('/').pop();
+
+    let res = await fetch(linkBase + qrCodeId);
+    res = await res.json();
+    setDataQr(res);
+  }
+
   const init = async () => {
     setloadingData(true);
     const req = await request.getAuth('persident/folkdata');
     // console.log({ req });
+    const res = await request.getQrCode();
+    if (res.status === 'success') {
+      fetchData(res.url);
+    }
     if (req.status === 'success') {
       console.log({ req });
       setLastName(req.lname);
@@ -301,7 +317,6 @@ const Profile = () => {
                 <img className={css.photo} src={image} alt='userPhoto' />
               </Link>
             </div>
-
             {/* Covid-19 блок */}
             <div style={{ display: 'flex', width: '100%', gap: 4 }}>
               <div style={{ display: 'flex', minWidth: 50 }}>
@@ -312,6 +327,7 @@ const Profile = () => {
                   height={50}
                 />
               </div>
+              {console.log({ dataQr })}
               <div
                 style={{
                   display: 'flex',
@@ -338,23 +354,28 @@ const Profile = () => {
                     COVID-19 <br /> Сведения о вакцинации (QR-код)
                   </span>
                 </Link>
-                {/*  */}
-                <div
-                  style={{
-                    fontFamily: 'Montserrat',
-                    fontStyle: 'normal',
-                    fontWeight: 'normal',
-                    fontSize: '14px',
-                    lineHeight: '17px',
-                    color: '#2C2C2C',
-                  }}
-                >
-                  Сертификат подтвержден <br />
-                  Действует до {`01.10.2022`}
-                </div>
+                {dataQr ? (
+                  <div
+                    style={{
+                      fontFamily: 'Montserrat',
+                      fontStyle: 'normal',
+                      fontWeight: 'normal',
+                      fontSize: '14px',
+                      lineHeight: '17px',
+                      color: '#2C2C2C',
+                    }}
+                  >
+                    {dataQr.items[0].status === 'OK'
+                      ? 'Сертификат подтвержден'
+                      : 'Сертификат не подтвержден'}
+                    <br />
+                    Действует до {dataQr.items[0].expiredAt}
+                  </div>
+                ) : (
+                  <p>Нет данных о сертификате</p>
+                )}
               </div>
             </div>
-
             <div className={css.options}>
               <div>
                 <button
@@ -370,7 +391,6 @@ const Profile = () => {
                 </button>
               </div>
             </div>
-
             {/* Начало формы "Редактировать данные" */}
             <div className={css.inputs}>
               <div className={css.formInput}>

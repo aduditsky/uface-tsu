@@ -34,9 +34,7 @@ const CovidCertPage = () => {
     });
     // Add logic to add the camera and scan it
     // startQrCode();
-  }, []);
-
-  // console.log({ decodedQRData });
+  }, [url, getQrCode]);
 
   if (loading) {
     return <Spinner show={loading} />;
