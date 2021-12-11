@@ -57,16 +57,32 @@ const Profile = () => {
   const [preEditData, setPreEditData] = useState({});
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
+  //QR Code данные
+  const [dataQr, setDataQr] = useState(null);
+
   useEffect(() => {
     init();
     getSubData();
     // eslint-disable-next-line
   }, []);
 
+  async function fetchData(url) {
+    const linkBase = 'https://www.gosuslugi.ru/api/covid-cert/v2/cert/status/';
+    let qrCodeId = url.split('/').pop();
+
+    let res = await fetch(linkBase + qrCodeId);
+    res = await res.json();
+    setDataQr(res);
+  }
+
   const init = async () => {
     setloadingData(true);
     const req = await request.getAuth('persident/folkdata');
     // console.log({ req });
+    const res = await request.getQrCode();
+    if (res.status === 'success') {
+      fetchData(res.url);
+    }
     if (req.status === 'success') {
       console.log({ req });
       setLastName(req.lname);
@@ -301,10 +317,9 @@ const Profile = () => {
                 <img className={css.photo} src={image} alt='userPhoto' />
               </Link>
             </div>
-
             {/* Covid-19 блок */}
-            <div style={{ display: 'flex', width: '100%', gap: 4 }}>
-              <div style={{ display: 'flex', minWidth: 50 }}>
+            <div className={css.covidContainer}>
+              <div className={css.covidLogoContainer}>
                 <img
                   src={CovidLogo}
                   alt={`Изображение Covid-19`}
@@ -312,49 +327,29 @@ const Profile = () => {
                   height={50}
                 />
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  textAlign: 'left',
-                  alignItems: 'left',
-                  alignContent: 'left',
-                  flexDirection: 'column',
-                  width: '100%',
-                  paddingTop: 5,
-                  marginBottom: 4,
-                }}
-              >
+              {console.log({ dataQr })}
+              <div className={css.covidInfoContainer}>
                 <Link to='/covid'>
-                  <span
-                    style={{
-                      fontFamily: 'Montserrat',
-                      fontStyle: 'normal',
-                      fontWeight: 'normal',
-                      fontSize: '14px',
-                      lineHeight: '17px',
-                      color: '#247ABF',
-                    }}
-                  >
+                  <span className={css.covidInfoHeader}>
                     COVID-19 <br /> Сведения о вакцинации (QR-код)
                   </span>
                 </Link>
-                {/*  */}
-                <div
-                  style={{
-                    fontFamily: 'Montserrat',
-                    fontStyle: 'normal',
-                    fontWeight: 'normal',
-                    fontSize: '14px',
-                    lineHeight: '17px',
-                    color: '#2C2C2C',
-                  }}
-                >
-                  Сертификат подтвержден <br />
-                  Действует до {`01.10.2022`}
-                </div>
+                {dataQr ? (
+                  <div className={css.covidData}>
+                    {dataQr.items[0].status === 'OK'
+                      ? 'Сертификат подтвержден'
+                      : 'Сертификат не подтвержден'}
+                    <br />
+                    Действует до {dataQr.items[0].expiredAt}
+                  </div>
+                ) : (
+                  <div className={css.covidData}>
+                    Нет данных о сертификате. <br />
+                    Добавьте или обновите его.
+                  </div>
+                )}
               </div>
             </div>
-
             <div className={css.options}>
               <div>
                 <button
@@ -370,7 +365,6 @@ const Profile = () => {
                 </button>
               </div>
             </div>
-
             {/* Начало формы "Редактировать данные" */}
             <div className={css.inputs}>
               <div className={css.formInput}>
