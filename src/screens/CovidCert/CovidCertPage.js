@@ -6,6 +6,7 @@ import request from '../../request';
 import Spinner from '../../components/Spinner/Spinner';
 import Back from '../../components/Back/Back';
 import CovidLogo from '../../images/covid-logo.png';
+import Modal from '../../components/Modal/Modal';
 import { useQRCodeScan } from '../../lib/useQRCodeScan';
 import { Html5Qrcode } from 'html5-qrcode';
 
@@ -18,7 +19,10 @@ const CovidCertPage = () => {
   const [url, setUrl] = useState(null);
   const [isSaving, setSave] = useState(false);
   const [isSuccessful, setSuccess] = useState(null);
-  const [errSaveMsg, setMsg] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [title, setTitle] = useState('');
+  const [textError, setTextError] = useState('');
+
   let inputFile = null;
   let histrory = useHistory();
 
@@ -35,14 +39,12 @@ const CovidCertPage = () => {
     if (decodedQRData.data?.includes('https://www.gosuslugi.ru/covid-cert/')) {
       setUrl(decodedQRData.data);
     }
+
     getQrCode().then((result) => {
       if (result.status === 'success') {
         setUrl(result.url);
       }
     });
-
-    // Add logic to add the camera and scan it
-    // startQrCode();
   }, [getQrCode, decodedQRData]);
 
   if (loading) {
@@ -113,13 +115,18 @@ const CovidCertPage = () => {
                 }
                 if (result.status === 'error') {
                   setSuccess(false);
-                  setMsg(result.errordesc);
+                  setTitle('Ошибка');
+                  setTextError(result.errordesc);
+                  setOpenModal(true);
                 }
               })
               .catch((err) => {
                 // failure, handle it.
+                setTitle('Ошибка');
+                setTextError('Не удалось сохранить. Попробуйте еще раз.');
+                setOpenModal(true);
                 setSuccess(false);
-                console.log(`Save is not successuf. Reason: ${err}`);
+                // console.log(`Save is not successuf. Reason: ${err}`);
               });
             setSave(false);
           }}
@@ -130,7 +137,6 @@ const CovidCertPage = () => {
             ? 'Сохраняем...'
             : 'Попробуйте еще раз'}
         </button>
-        {errSaveMsg && url && <p>{errSaveMsg}</p>}
       </div>
       <input
         type='file'
@@ -159,20 +165,25 @@ const CovidCertPage = () => {
             })
             .catch((err) => {
               // failure, handle it.
-              console.log(`Error scanning file. Reason: ${err}`);
+              setTitle('Ошибка');
+              setTextError(
+                'Не удалось прочитать QR-code. Попробуйте еще раз. Возможно нужно будет сделать скриншот вашего кода крупным планом.'
+              );
+              setOpenModal(true);
+              // console.log(`Error scanning file. Reason: ${err}`);
             });
 
           e.target.value = '';
         }}
       />
-      {/* <Modal
+      <Modal
         open={openModal}
         close={() => setOpenModal(false)}
         title={title}
         text={textError}
         BtnClick={() => setOpenModal(false)}
         buttonTitle='Ок'
-      /> */}
+      />
     </div>
   );
 };
