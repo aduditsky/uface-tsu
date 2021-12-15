@@ -19,6 +19,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000000001;
+  max-width: 375px;
 }
 .modalData {
   background-color: white;
@@ -34,6 +35,7 @@
   height: 56px;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   line-height: 24px;
   font-size: 20px;
   font-weight: 600;

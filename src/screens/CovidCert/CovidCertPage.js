@@ -52,7 +52,7 @@ const CovidCertPage = () => {
   }
 
   return (
-    <div>
+    <>
       <Back to='/profile' />
       <h1 className={css.Header}>COVID-19</h1>
       <div className={css.covidPreview}>
@@ -184,7 +184,7 @@ const CovidCertPage = () => {
         BtnClick={() => setOpenModal(false)}
         buttonTitle='Ок'
       />
-    </div>
+    </>
   );
 };
 
