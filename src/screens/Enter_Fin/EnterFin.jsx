@@ -3,6 +3,7 @@ import React from 'react';
 // import faceelook from '../../images/faceelook.png';
 
 import {
+  baseUrl,
   FaceELookLogo,
   TextEnterUniversity,
   UniversityLogo,
@@ -60,7 +61,10 @@ const EnterFin = () => {
         </div>
         {TextEnterUniversity === 'ТГУ' && (
           <div className={css.log_in_tsu}>
-            <a href='/persident/tgulogin' className={css.log_in_with}>
+            <a
+              href={`${baseUrl}/persident/tgulogin`}
+              className={css.log_in_with}
+            >
               Войти по {TextEnterUniversity}.Аккаунты
             </a>
           </div>

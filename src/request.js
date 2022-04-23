@@ -9,7 +9,7 @@ const get = async (api) => {
 const getAuth = async (api) => {
   var myHeaders = new Headers();
   myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'));
-  myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+  // myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
   var requestOptions = {
     method: 'GET',
@@ -30,13 +30,21 @@ const deletePhoto = async (api) => {
   var urlencoded = new URLSearchParams();
 
   var requestOptions = {
+    // method: 'DELETE',§
     method: 'DELETE',
     headers: myHeaders,
     body: urlencoded,
     redirect: 'follow',
   };
 
-  const req = await fetch(baseUrl + api, requestOptions);
+  // console.log({ api: baseUrl + api, token: localStorage.getItem('token') });
+  console.log(baseUrl + 'persident/folkimgext?faceid=' + api);
+
+  const req = await fetch(
+    baseUrl + 'persident/folkimgext?faceid=' + api,
+    // baseUrl + 'persident/folkimgext',
+    requestOptions
+  );
   const json = await req.json();
   return json;
 };

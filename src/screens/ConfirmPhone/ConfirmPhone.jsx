@@ -163,13 +163,16 @@ export default function ConfirmPhoneNumberScreen() {
             }}
             className={css.ResendButton}
           >
-            Не приходит код?
+            Повторный звонок?
           </button>
         ) : (
-          <p className={css.ResendEmptyP}>Не приходит код?</p>
+          <p className={css.ResendEmptyP}>Повторный звонок?</p>
         )}
       </div>
-      <p>Код подтверждения отправлен вам на номер:</p>
+      <p>
+        На данный номер будет произведен звонок, вам необходимо ввести последние
+        4 цифры этого номера:
+      </p>
       {!loadingPhone && phone ? (
         <p className={css.Phone}>
           {parsePhoneNumber(phone, 'RU')?.formatInternational()}

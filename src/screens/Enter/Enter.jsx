@@ -54,11 +54,13 @@ const Enter = () => {
   const HandleSubmit = async (e) => {
     e.preventDefault();
     setIsEnter(true);
+
     try {
       const data = await request.post('persident/folklogin', [
         ['login', login[0] === '9' ? '7' + login : login],
         ['pass', password],
       ]);
+
       if (data.status !== 'error') {
         // setTitle('Успешно');
         localStorage.setItem('token', data.tid);

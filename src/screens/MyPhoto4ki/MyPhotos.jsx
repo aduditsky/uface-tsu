@@ -283,29 +283,29 @@ const MyPhotos = () => {
                   >
                     Сделать фото
                   </button>
-                  <button
-                    onClick={async (e) => {
-                      // console.log({ photo });
-                      try {
-                        const data = await request.deletePhoto(
-                          `persident/folkimgext?faceid=${photo.faceid}`
-                        );
-                        // console.log(data);
-                        if (data.status !== 'error') {
-                          setOpenModal(true);
-                          setTitle('Успешно');
-                          init();
-                        } else {
-                          setTitle('Ошибка');
-                          setOpenModal(true);
-                          setTextError(data.errordesc);
-                        }
-                      } catch {}
-                    }}
-                    className={css.update}
-                  >
-                    Удалить
-                  </button>
+                  {photo.faceid !== '' && (
+                    <button
+                      onClick={async (e) => {
+                        try {
+                          const data = await request.deletePhoto(
+                            `${photo.faceid}`
+                          );
+                          if (data.status !== 'error') {
+                            setOpenModal(true);
+                            setTitle('Успешно');
+                            init();
+                          } else {
+                            setTitle('Ошибка');
+                            setOpenModal(true);
+                            setTextError(data.errordesc);
+                          }
+                        } catch {}
+                      }}
+                      className={css.update}
+                    >
+                      Удалить
+                    </button>
+                  )}
                 </>
               )}
             </div>
